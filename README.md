@@ -126,3 +126,4 @@ Be sure to check out all of the [amazing people](CONTRIBUTORS.md) that have cont
 To be notified of important news (such as new releases, security advisories, etc), [sign up for our list](http://eepurl.com/XyZKz). We'll never sell or give away your info, and we'll only email you when it's important.
 
 
+# snipe
