@@ -426,30 +426,6 @@
                                             @endif
                                         </ul>
                                     </div>
-                                    @if  ($snipeSettings->qr_code=='1')
-    <div class="col-md-12 text-center" style="padding-top: 15px;">
-        <img src="{{ config('app.url') }}/hardware/{{ $asset->id }}/qr_code" class="img-thumbnail" style="height: 150px; width: 150px; margin-right: 10px;" alt="QR code for {{ $asset->getDisplayNameAttribute() }}">
-    </div>
-@endif
-
-@if (!empty($asset->_snipeit_sap_code_47))
-    <div class="col-md-12 text-center" style="padding-top: 30px;">
-        <h3 class="mb-3">QR Code SAP</h3>
-
-        <div class="input-group mb-3">
-            <input type="text" class="form-control text-center fw-bold"
-                   value="{{ $asset->_snipeit_sap_code_47 }}"
-                   readonly
-                   style="background-color: #f8f9fa; border: 2px solid #ced4da; border-radius: 8px; font-size: 18px; color: #495057;">
-        </div>
-
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode($asset->_snipeit_sap_code_47) }}"
-             alt="QR Code SAP"
-             class="img-thumbnail"
-             style="max-width: 150px; height: auto; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
-    </div>
-@endif
-
                                 <br><br>
 
                             </div>
@@ -1149,7 +1125,26 @@
                                             </div>
                                         </div>
                                     @endif
-
+                                        
+                                    @if (!empty($asset->_snipeit_sap_code_47))
+    <div class="row">
+        <div class="col-md-3">
+            <strong>QR Code SAP</strong>
+        </div>
+        <div class="col-md-9 text-center">
+            <div class="mb-2">
+                <input type="text" class="form-control text-center fw-bold"
+                    value="{{ $asset->_snipeit_sap_code_47 }}"
+                    readonly
+                    style="background-color: #f8f9fa; border: 2px solid #ced4da; border-radius: 8px; font-size: 18px; color: #495057;">
+            </div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode($asset->_snipeit_sap_code_47) }}"
+                alt="QR Code SAP"
+                class="img-thumbnail"
+                style="max-width: 150px; height: auto; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
+        </div>
+    </div>
+@endif
 
 
                                     <div class="row">
