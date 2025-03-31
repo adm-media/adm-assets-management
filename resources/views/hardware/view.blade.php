@@ -1536,25 +1536,7 @@
 
 
                    
-    document.addEventListener("DOMContentLoaded", function() {
-        var inputValue = document.getElementById('qrcode_value').value;
-        if (inputValue.trim() !== "" && inputValue !== "Nessun valore") {
-            generateQRCode();
-        }
-    });
-
-    function generateQRCode() {
-        var inputValue = document.getElementById('qrcode_value').value;
-        var qrImage = document.getElementById('qrcode_image');
-
-        if (inputValue.trim() !== "" && inputValue !== "Nessun valore") {
-            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(inputValue);
-            qrImage.style.display = "block";
-        } else {
-            qrImage.style.display = "none";
-        }
-    }
-
+    
                 </script>
     @include ('partials.bootstrap-table')
 
