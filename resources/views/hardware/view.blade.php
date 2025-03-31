@@ -433,30 +433,25 @@
                                         </div>
                                     @endif
 
+                                    @if (!empty($asset->_snipeit_sap_code_47))
+    <div class="col-md-12 text-center" style="padding-top: 30px;">
+        <h3 class="mb-3">QR Code SAP</h3>
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control text-center fw-bold"
+                   value="{{ $asset->_snipeit_sap_code_47 }}"
+                   readonly
+                   style="background-color: #f8f9fa; border: 2px solid #ced4da; border-radius: 8px; font-size: 18px; color: #495057;">
+        </div>
+
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode($asset->_snipeit_sap_code_47) }}"
+             alt="QR Code SAP"
+             class="img-thumbnail"
+             style="max-width: 150px; height: auto; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
+    </div>
+@endif
+
                                 <br><br>
-                                <div class="col-md-12">
-    <h3 class="mb-3">Qrcode SAP:</h3>
-
-    <!-- Campo di testo visualizzazione -->
-    <div class="input-group">
-        <input type="text" id="qrcode_value" class="form-control text-center fw-bold"
-               value="{{ $asset->_snipeit_sap_code_47 ?? 'Nessun valore' }}" readonly
-               style="background-color: #f8f9fa; border: 2px solid #ced4da; border-radius: 8px; font-size: 18px; color: #495057;">
-
-        
-        
-    </div>
-
-    <br>
-
-    <!-- QR Code -->
-    <div id="qrcode_container" class="text-center">
-        <img id="qrcode_image" src="" alt="QR Code" 
-             style="display:none; max-width: 150px; height: auto;  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
-    </div>
-</div>
-                            </div>
-                            </div>
 
                             </div>
 
