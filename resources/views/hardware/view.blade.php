@@ -396,8 +396,7 @@
                                     @endif
 
                                 <br><br>
-                            </div>
-                            <div class="col-md-12">
+                                <div class="col-md-12">
     <h3 class="mb-3">Qrcode SAP:</h3>
 
     <!-- Campo di testo visualizzazione -->
@@ -418,6 +417,7 @@
              style="display:none; max-width: 150px; height: auto;  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
     </div>
 </div>
+                            </div>
                             </div>
 
 
