@@ -397,7 +397,49 @@
 
                                 <br><br>
                             </div>
+                            <div class="col-md-12">
+    <h3 class="mb-3">Qrcode SAP:</h3>
 
+    <!-- Campo di testo visualizzazione -->
+    <div class="input-group">
+        <input type="text" id="qrcode_value" class="form-control text-center fw-bold"
+               value="{{ $asset->_snipeit_sap_code_47 ?? 'Nessun valore' }}" readonly
+               style="background-color: #f8f9fa; border: 2px solid #ced4da; border-radius: 8px; font-size: 18px; color: #495057;">
+
+        
+        
+    </div>
+
+    <br>
+
+    <!-- QR Code -->
+    <div id="qrcode_container" class="text-center">
+        <img id="qrcode_image" src="" alt="QR Code" 
+             style="display:none; max-width: 150px; height: auto;  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var inputValue = document.getElementById('qrcode_value').value;
+        if (inputValue.trim() !== "" && inputValue !== "Nessun valore") {
+            generateQRCode();
+        }
+    });
+
+    function generateQRCode() {
+        var inputValue = document.getElementById('qrcode_value').value;
+        var qrImage = document.getElementById('qrcode_image');
+
+        if (inputValue.trim() !== "" && inputValue !== "Nessun valore") {
+            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(inputValue);
+            qrImage.style.display = "block";
+        } else {
+            qrImage.style.display = "none";
+        }
+    }
+</script>
+                            </div>
 
 
 
