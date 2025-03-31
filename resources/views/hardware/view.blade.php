@@ -396,6 +396,44 @@
                                     @endif
 
                                 <br><br>
+                            </div>
+                            @if (isset($asset->location))
+                                                <li>
+                                                    <x-icon type="locations" class="fa-fw" />
+                                                     {{ $asset->location->name }}</li>
+                                                <li>{{ $asset->location->address }}
+                                                    @if ($asset->location->address2!='')
+                                                        {{ $asset->location->address2 }}
+                                                    @endif
+                                                </li>
+
+                                                <li>{{ $asset->location->city }}
+                                                    @if (($asset->location->city!='') && ($asset->location->state!=''))
+                                                        ,
+                                                    @endif
+                                                    {{ $asset->location->state }} {{ $asset->location->zip }}
+                                                </li>
+                                            @endif
+                                            <li>
+                                                <x-icon type="calendar" class="fa-fw" />
+                                                {{ trans('admin/hardware/form.checkout_date') }}: {{ Helper::getFormattedDateObject($asset->last_checkout, 'date', false) }}
+                                            </li>
+                                            @if (isset($asset->expected_checkin))
+                                                <li>
+                                                    <x-icon type="calendar" class="fa-fw" />
+                                                    {{ trans('admin/hardware/form.expected_checkin') }}: {{ Helper::getFormattedDateObject($asset->expected_checkin, 'date', false) }}
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                @endif
+                                    @if  ($snipeSettings->qr_code=='1')
+                                        <div class="col-md-12 text-center" style="padding-top: 15px;">
+                                            <img src="{{ config('app.url') }}/hardware/{{ $asset->id }}/qr_code" class="img-thumbnail" style="height: 150px; width: 150px; margin-right: 10px;" alt="QR code for {{ $asset->getDisplayNameAttribute() }}">
+                                        </div>
+                                    @endif
+
+                                <br><br>
                                 <div class="col-md-12">
     <h3 class="mb-3">Qrcode SAP:</h3>
 
@@ -418,6 +456,8 @@
     </div>
 </div>
                             </div>
+                            </div>
+
                             </div>
 
 
