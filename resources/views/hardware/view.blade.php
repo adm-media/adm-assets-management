@@ -37,15 +37,6 @@
             </div>
         @endif
 
-        @if ($asset->deleted_at!='')
-            <div class="col-md-12">
-                <div class="callout callout-warning">
-                    <x-icon type="warning" />
-                    {{ trans('general.asset_deleted_warning') }}
-                </div>
-            </div>
-        @endif
-
         <div class="col-md-12">
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs hidden-print">
@@ -86,29 +77,12 @@
                           <span class="hidden-lg hidden-md">
                             <x-icon type="assets" class="fa-2x" />
                           </span>
-                            <span class="hidden-xs hidden-sm">
-                                {{ trans('general.assets') }}
+                            <span class="hidden-xs hidden-sm">{{ trans('general.assets') }}
                                 {!! ($asset->assignedAssets()->count() > 0 ) ? '<span class="badge badge-secondary">'.number_format($asset->assignedAssets()->count()).'</span>' : '' !!}
 
                           </span>
                         </a>
                     </li>
-
-                    @if ($asset->assignedAccessories->count() > 0)
-                        <li>
-                            <a href="#accessories_assigned" data-toggle="tab" data-tooltip="true">
-
-                                <span class="hidden-lg hidden-md">
-                                    <i class="fas fa-keyboard fa-2x"></i>
-                                </span>
-                                <span class="hidden-xs hidden-sm">
-                                    {{ trans('general.accessories_assigned') }}
-                                    {!! ($asset->assignedAccessories()->count() > 0 ) ? '<span class="badge badge-secondary">'.number_format($asset->assignedAccessories()->count()).'</span>' : '' !!}
-
-                                </span>
-                            </a>
-                        </li>
-                    @endif
 
 
                     <li>
@@ -178,6 +152,15 @@
                     <div class="tab-pane fade in active" id="details">
                     <div class="row">
 
+                            @if ($asset->deleted_at!='')
+                                <div class="col-md-12">
+                                    <div class="callout callout-warning">
+                                        <x-icon type="warning" />
+                                        {{ trans('general.asset_deleted_warning') }}
+                                    </div>
+                                </div>
+                            @endif
+
                         <div class="info-stack-container">
                             <!-- Start button column -->
                             <div class="col-md-3 col-xs-12 col-sm-push-9 info-stack">
@@ -198,7 +181,7 @@
                                 @if ($asset->deleted_at=='')
                                     @can('update', $asset)
                                         <div class="col-md-12 hidden-print" style="padding-top: 5px;">
-                                            <a href="{{ route('hardware.edit', $asset) }}" class="btn btn-sm btn-warning btn-social btn-block hidden-print">
+                                            <a href="{{ route('hardware.edit', $asset->id) }}" class="btn btn-sm btn-warning btn-social btn-block hidden-print">
                                                 <x-icon type="edit" />
                                                 {{ trans('admin/hardware/general.edit') }}
                                             </a>
@@ -234,13 +217,14 @@
 
                                         <!-- Add notes -->
                                         @can('update', \App\Models\Asset::class)
+                                            <!--
+
                                             <div class="col-md-12 hidden-print" style="padding-top: 5px;">
-                                                <a href="#" style="width: 100%" data-toggle="modal" data-target="#createNoteModal" class="btn btn-sm btn-primary btn-block btn-social hidden-print">
+                                                <a href='{{ route('modal.show', 'add-note') }}?type=asset&id={{$asset->id}}' style="width: 100%" data-toggle="modal" data-target="#createModal" data-select='add-note_select_id' data-refresh="assetHistory" data-hasnopayload="true" class="btn btn-sm btn-primary btn-block btn-social hidden-print">
                                                     <x-icon type="note" />
-                                                    {{ trans('general.add_note') }}
-                                                </a>
-                                                @include ('modals.add-note', ['type' => 'asset', 'id' => $asset->id])
+                                                    {{ trans('general.add_note') }}</a>
                                             </div>
+                                            -->
                                         @endcan
 
 
@@ -268,21 +252,18 @@
                                 @endcan
 
                                 <div class="col-md-12 hidden-print" style="padding-top: 5px;">
-                                    <form
-                                        method="POST"
-                                        action="{{ route('hardware/bulkedit') }}"
-                                        accept-charset="UTF-8"
-                                        class="form-inline"
-                                        target="_blank"
-                                        id="bulkForm"
-                                    >
-                                    @csrf
+                                    {{ Form::open([
+                                                     'method' => 'POST',
+                                                     'route' => ['hardware/bulkedit'],
+                                                     'class' => 'form-inline',
+                                                      'target'=>'_blank',
+                                                      'id' => 'bulkForm']) }}
                                     <input type="hidden" name="bulk_actions" value="labels" />
                                     <input type="hidden" name="ids[{{$asset->id}}]" value="{{ $asset->id }}" />
                                     <button class="btn btn-block btn-social btn-sm btn-default" id="bulkEdit"{{ (!$asset->model ? ' disabled' : '') }}{!! (!$asset->model ? ' data-tooltip="true" title="'.trans('admin/hardware/general.model_invalid').'"' : '') !!}>
                                         <x-icon type="assets" />
                                         {{ trans_choice('button.generate_labels', 1) }}</button>
-                                    </form>
+                                        {{ Form::close() }}
                                 </div>
 
                                 @can('delete', $asset)
@@ -300,7 +281,7 @@
                                             </button>
                                             <span class="sr-only">{{ trans('general.delete') }}</span>
                                         @else
-                                            <form method="POST" action="{{ route('restore/hardware', [$asset]) }}">
+                                            <form method="POST" action="{{ route('restore/hardware', ['assetId' => $asset->id]) }}">
                                                 @csrf
                                                 <button class="btn btn-sm btn-block btn-warning btn-social delete-asset">
                                                     <x-icon type="restore" />
@@ -396,38 +377,53 @@
                                     @endif
 
                                 <br><br>
-                            </div>
-                            @if (isset($asset->location))
-                                                <li>
-                                                    <x-icon type="locations" class="fa-fw" />
-                                                     {{ $asset->location->name }}</li>
-                                                <li>{{ $asset->location->address }}
-                                                    @if ($asset->location->address2!='')
-                                                        {{ $asset->location->address2 }}
-                                                    @endif
-                                                </li>
 
-                                                <li>{{ $asset->location->city }}
-                                                    @if (($asset->location->city!='') && ($asset->location->state!=''))
-                                                        ,
-                                                    @endif
-                                                    {{ $asset->location->state }} {{ $asset->location->zip }}
-                                                </li>
-                                            @endif
-                                            <li>
-                                                <x-icon type="calendar" class="fa-fw" />
-                                                {{ trans('admin/hardware/form.checkout_date') }}: {{ Helper::getFormattedDateObject($asset->last_checkout, 'date', false) }}
-                                            </li>
-                                            @if (isset($asset->expected_checkin))
-                                                <li>
-                                                    <x-icon type="calendar" class="fa-fw" />
-                                                    {{ trans('admin/hardware/form.expected_checkin') }}: {{ Helper::getFormattedDateObject($asset->expected_checkin, 'date', false) }}
-                                                </li>
-                                            @endif
-                                        </ul>
-                                    </div>
-                                <br><br>
+                                <div class="col-md-12">
+    <h3 class="mb-3">Qrcode SAP:</h3>
+
+    <!-- Campo di testo visualizzazione -->
+    <div class="input-group">
+        <input type="text" id="qrcode_value" class="form-control text-center fw-bold"
+               value="{{ $asset->_snipeit_sap_code_47 ?? 'Nessun valore' }}" readonly
+               style="background-color: #f8f9fa; border: 2px solid #ced4da; border-radius: 8px; font-size: 18px; color: #495057;">
+
+        
+        
+    </div>
+
+    <br>
+
+    <!-- QR Code -->
+    <div id="qrcode_container" class="text-center">
+        <img id="qrcode_image" src="" alt="QR Code" 
+             style="display:none; max-width: 150px; height: auto;  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var inputValue = document.getElementById('qrcode_value').value;
+        if (inputValue.trim() !== "" && inputValue !== "Nessun valore") {
+            generateQRCode();
+        }
+    });
+
+    function generateQRCode() {
+        var inputValue = document.getElementById('qrcode_value').value;
+        var qrImage = document.getElementById('qrcode_image');
+
+        if (inputValue.trim() !== "" && inputValue !== "Nessun valore") {
+            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(inputValue);
+            qrImage.style.display = "block";
+        } else {
+            qrImage.style.display = "none";
+        }
+    }
+</script>
                             </div>
+
+                            
+
 
 
 
@@ -479,7 +475,7 @@
                                                     {{ $asset->assetstatus->name }}
                                                     <label class="label label-default">{{ trans('general.deployed') }}</label>
 
-
+                                                
                                                     <x-icon type="long-arrow-right" />
                                                     <x-icon type="{{ $asset->assignedType() }}" class="fa-fw" />
                                                     {!!  $asset->assignedTo->present()->nameUrl() !!}
@@ -1161,7 +1157,7 @@
                                             {{ ($asset->userRequests) ? (int) $asset->userRequests->count() : '0' }}
                                         </div>
                                     </div>
-
+                                    
                                 </div> <!--/end striped container-->
                             </div> <!-- end col-md-9 -->
                         </div><!-- end info-stack-container -->
@@ -1241,11 +1237,7 @@
                                                         <a href="{{ route('components.show', $component->id) }}">{{ $component->name }}</a>
                                                     </td>
                                                     <td>{{ $component->pivot->assigned_qty }}</td>
-                                                    <td>
-                                                        @if ($component->purchase_cost!='')
-                                                            {{ trans('general.cost_each', ['amount' => Helper::formatCurrencyOutput($component->purchase_cost)])  }}
-                                                        @endif
-                                                    </td>
+                                                    <td>{{ Helper::formatCurrencyOutput($component->purchase_cost) }} each</td>
                                                     <td>{{ $component->serial }}</td>
                                                     <td>
                                                         <a href="{{ route('components.checkin.show', $component->pivot->id) }}" class="btn btn-sm bg-purple hidden-print" data-tooltip="true">{{ trans('general.checkin') }}</a>
@@ -1283,14 +1275,11 @@
                                 @if ($asset->assignedAssets->count() > 0)
 
 
-                                    <form
-                                        method="POST"
-                                        action="{{ route('hardware/bulkedit') }}"
-                                        accept-charset="UTF-8"
-                                        class="form-inline"
-                                        id="bulkForm"
-                                    >
-                                    @csrf
+                                    {{ Form::open([
+                                              'method' => 'POST',
+                                              'route' => ['hardware/bulkedit'],
+                                              'class' => 'form-inline',
+                                               'id' => 'bulkForm']) }}
                                     <div id="toolbar">
                                         <label for="bulk_actions"><span class="sr-only">{{ trans('general.bulk_actions')}}</span></label>
                                         <select name="bulk_actions" class="form-control select2" style="width: 150px;" aria-label="bulk_actions">
@@ -1328,7 +1317,7 @@
                                         </table>
 
 
-                                        </form>
+                                        {{ Form::close() }}
                                     </div>
 
                                 @else
@@ -1343,40 +1332,6 @@
                             </div><!-- /col -->
                         </div> <!-- row -->
                     </div> <!-- /.tab-pane software -->
-
-
-                <div class="tab-pane" id="accessories_assigned">
-
-
-                    <div class="table table-responsive">
-
-                        <h2 class="box-title" style="float:left">
-                            {{ trans('general.accessories_assigned') }}
-                        </h2>
-
-                        <table
-                                data-columns="{{ \App\Presenters\AssetPresenter::assignedAccessoriesDataTableLayout() }}"
-                                data-cookie-id-table="accessoriesAssignedListingTable"
-                                data-pagination="true"
-                                data-id-table="accessoriesAssignedListingTable"
-                                data-search="true"
-                                data-side-pagination="server"
-                                data-show-columns="true"
-                                data-show-export="true"
-                                data-show-refresh="true"
-                                data-sort-order="asc"
-                                data-click-to-select="true"
-                                id="accessoriesAssignedListingTable"
-                                class="table table-striped snipe-table"
-                                data-url="{{ route('api.assets.assigned_accessories', ['asset' => $asset]) }}"
-                                data-export-options='{
-                              "fileName": "export-locations-{{ str_slug($asset->name) }}-accessories-{{ date('Y-m-d') }}",
-                              "ignoreColumn": ["actions","image","change","checkbox","checkincheckout","icon"]
-                              }'>
-                        </table>
-
-                    </div><!-- /.table-responsive -->
-                </div><!-- /.tab-pane -->
 
 
                     <div class="tab-pane fade" id="maintenances">
@@ -1474,23 +1429,21 @@
                         </div> <!-- /.row -->
                     </div> <!-- /.tab-pane files -->
 
-                    @if ($asset->model)
-                        @can('view', $asset->model)
-                            <div class="tab-pane fade" id="modelfiles">
-                                <div class="row{{ (($asset->model) && ($asset->model->uploads->count() > 0)) ? '' : ' hidden-print' }}">
-                                    <div class="col-md-12">
+                    @can('view', $asset->model)
+                    <div class="tab-pane fade" id="modelfiles">
+                        <div class="row{{ (($asset->model) && ($asset->model->uploads->count() > 0)) ? '' : ' hidden-print' }}">
+                            <div class="col-md-12">
 
-                                        <x-filestable
-                                                filepath="private_uploads/assetmodels/"
-                                                showfile_routename="show/modelfile"
-                                                deletefile_routename="delete/modelfile"
-                                                :object="$asset->model" />
+                                <x-filestable
+                                        filepath="private_uploads/assetmodels/"
+                                        showfile_routename="show/modelfile"
+                                        deletefile_routename="delete/modelfile"
+                                        :object="$asset->model" />
 
-                                    </div> <!-- /.col-md-12 -->
-                                </div> <!-- /.row -->
-                            </div> <!-- /.tab-pane files -->
-                        @endcan
-                    @endif
+                            </div> <!-- /.col-md-12 -->
+                        </div> <!-- /.row -->
+                    </div> <!-- /.tab-pane files -->
+                    @endcan
             </div><!-- /.tab-content -->
         </div><!-- nav-tabs-custom -->
     </div>
@@ -1508,28 +1461,6 @@
                         $(this).find(".modal-body").text(content);
                         $(this).find(".modal-header").text(title);
                     });
-
-
-
-                   
-    document.addEventListener("DOMContentLoaded", function() {
-        var inputValue = document.getElementById('qrcode_value').value;
-        if (inputValue.trim() !== "" && inputValue !== "Nessun valore") {
-            generateQRCode();
-        }
-    });
-
-    function generateQRCode() {
-        var inputValue = document.getElementById('qrcode_value').value;
-        var qrImage = document.getElementById('qrcode_image');
-
-        if (inputValue.trim() !== "" && inputValue !== "Nessun valore") {
-            qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(inputValue);
-            qrImage.style.display = "block";
-        } else {
-            qrImage.style.display = "none";
-        }
-    }
 
                 </script>
     @include ('partials.bootstrap-table')
