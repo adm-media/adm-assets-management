@@ -417,30 +417,21 @@
                                 @if (($snipeSettings->qr_code=='1') || $snipeSettings->label2_2d_type!='none')
                                     <div class="col-md-12 text-center" style="padding-top: 15px;">
                                         <img src="{{ config('app.url') }}/hardware/{{ $asset->id }}/qr_code" class="img-thumbnail" style="height: 150px; width: 150px; margin-right: 10px;" alt="QR code for {{ $asset->getDisplayNameAttribute() }}">
+
+                                        <h3 class="mb-3">Qrcode SAP:</h3>
+
+                                        <input type="text" id="qrcode_value" class="form-control text-center fw-bold"
+                                               value="{{ $asset->_snipeit_sap_code_47 ?? 'Nessun valore' }}" readonly
+                                               style="background-color: #f8f9fa; border: 2px solid #ced4da; border-radius: 8px; font-size: 18px; color: #495057; max-width: 260px; margin: 0 auto;">
+
+                                        <br>
+
+                                        <img id="qrcode_image" src="" alt="QR Code"
+                                             style="display:none; max-width: 150px; height: auto; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); margin-top: 10px;">
                                     </div>
                                 @endif
                                 <br><br>
                             </div>
- <h3 class="mb-3">Qrcode SAP:</h3>
-
-    <!-- Campo di testo visualizzazione -->
-    <div class="input-group">
-        <input type="text" id="qrcode_value" class="form-control text-center fw-bold"
-               value="{{ $asset->_snipeit_sap_code_47 ?? 'Nessun valore' }}" readonly
-               style="background-color: #f8f9fa; border: 2px solid #ced4da; border-radius: 8px; font-size: 18px; color: #495057;">
-
-        
-        
-    </div>
-
-    <br>
-
-    <!-- QR Code -->
-    <div id="qrcode_container" class="text-center">
-        <img id="qrcode_image" src="" alt="QR Code" 
-             style="display:none; max-width: 150px; height: auto;  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
-    </div>
-</div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var inputValue = document.getElementById('qrcode_value').value;
