@@ -12,7 +12,8 @@ return [
     'create'                    => 'Create Location',
     'update'                    => 'Update Location',
     'print_assigned'            => 'Print Assigned',
-    'print_all_assigned'        => 'Print All Assigned',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Location Name',
     'address'                   => 'Adreça',
     'address2'                   => 'Address Line 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Signed By (Finance Auditor):',
     'signed_by_location_manager' => 'Signed By (Location Manager):',
     'signed_by'                 => 'Signed Off By:',
+    'clone'  					=> 'Clone Location',
 ];

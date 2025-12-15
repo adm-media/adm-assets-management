@@ -2,8 +2,8 @@
 
 return array(
 
-    'accepted'                  => 'Este aceitou este ativo com sucesso.',
-    'declined'                  => 'Você recusou com sucesso esse ativo.',
+    'accepted'                  => 'You have successfully accepted this item.',
+    'declined'                  => 'You have successfully declined this item.',
     'bulk_manager_warn'	        => 'Os usuários foram atualizados com êxito, no entanto seu Gerenciador de entrada não foi salvo porque o gerente selecionado estava também na lista de usuários a ser editado e usuários podem não ser seu próprio gerente. Por favor, selecione os usuários novamente, excluindo o gerente.',
     'user_exists'               => 'O usuário já existe!',
     'user_not_found'            => 'O usuário não existe ou você não tem permissão para visualizá-lo.',
@@ -53,7 +53,7 @@ return array(
         'ldap_could_not_search' => 'Não foi possível procurar o servidor LDAP. Por favor verifique as configurações do servidor LDAP no arquivo de configurações.<br>Erro do Servidor LDAP:',
         'ldap_could_not_get_entries' => 'Não foi possível obter informações do servidor LDAP. Por favor verifique as configurações do servidor LDAP no arquivo de configurações.<br>Erro do Servidor LDAP:',
         'password_ldap' => 'A senha desta conta é gerenciada pelo LDAP / Active Directory. Entre em contato com seu departamento de TI para alterar sua senha. ',
-        'multi_company_items_assigned' => 'This user has items assigned that belong to a different company. Please check them in or edit their company.'
+        'multi_company_items_assigned' => 'Este usuário tem itens atribuídos que pertencem a uma empresa diferente. Por favor, verifique-os ou edite a empresa deles.'
     ),
 
     'deletefile' => array(

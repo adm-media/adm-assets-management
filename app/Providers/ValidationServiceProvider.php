@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\CustomField;
 use App\Models\Department;
+use App\Models\Location;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -282,40 +283,35 @@ class ValidationServiceProvider extends ServiceProvider
             }
         });
 
-        Validator::extend('is_unique_department', function ($attribute, $value, $parameters, $validator) {
+        /**
+         * Check that the 'name' field is unique in the table while within both company_id and location_id
+         * This is only used by Departments right now, but could be used elsewhere in the future.
+         */
+        Validator::extend('is_unique_across_company_and_location', function ($attribute, $value, $parameters, $validator) {
             $data = $validator->getData();
+            $table = array_get($parameters, 0);
 
-            if (
-                array_key_exists('location_id', $data) && $data['location_id'] !== null &&
-                array_key_exists('company_id', $data) && $data['company_id'] !== null
-            ) {
-                //for updating existing departments
-                if(array_key_exists('id', $data) && $data['id'] !== null){
-                    $count = Department::where('name', $data['name'])
-                        ->where('location_id', $data['location_id'])
-                        ->where('company_id', $data['company_id'])
-                        ->whereNotNull('company_id')
-                        ->whereNotNull('location_id')
-                        ->where('id', '!=', $data['id'])
-                        ->count('name');
+            $count = DB::table($table)->select($attribute)
+                ->where($attribute, $value)
+                ->whereNull('deleted_at');
 
-                    return $count < 1;
-                }else // for entering in new departments
-                {
-                $count = Department::where('name', $data['name'])
-                    ->where('location_id', $data['location_id'])
-                    ->where('company_id', $data['company_id'])
-                    ->whereNotNull('company_id')
-                    ->whereNotNull('location_id')
-                    ->count('name');
-
-                return $count < 1;
+            if (array_key_exists('id', $data) && $data['id'] !== null) {
+                $count = $count->where('id', '!=', $data['id']);
             }
-        }
-            else {
-                return true;
-        }
+
+            if (array_key_exists('location_id', $data) && $data['location_id'] !== null) {
+                $count = $count->where('location_id', $data['location_id']);
+            }
+
+            if (array_key_exists('company_id', $data) && $data['company_id'] !== null) {
+                $count = $count->where('company_id', $data['company_id']);
+            }
+
+            $count = $count->count('name');
+            return $count < 1;
+
         });
+
 
         Validator::extend('not_array', function ($attribute, $value, $parameters, $validator) {
             return !is_array($value);
@@ -352,6 +348,20 @@ class ValidationServiceProvider extends ServiceProvider
             $options = $field->formatFieldValuesAsArray();
 
             return in_array($value, $options);
+        });
+
+        // Validates that the company of the validated object matches the company of the location in case of scoped locations
+        Validator::extend('fmcs_location', function ($attribute, $value, $parameters, $validator){
+            $settings = Setting::getSettings();
+            if ($settings->full_multiple_companies_support == '1' && $settings->scope_locations_fmcs == '1') {
+                $company_id = array_get($validator->getData(), 'company_id');
+                $location = Location::find($value);
+
+                if (($location) && ($company_id != $location->company_id)) {
+                    return false;
+                }
+            }
+            return true;
         });
     }
 

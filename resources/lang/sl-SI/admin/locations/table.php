@@ -12,7 +12,8 @@ return [
     'create'                    => 'Ustvari lokacijo',
     'update'                    => 'Posodobi lokacijo',
     'print_assigned'            => 'Natisni dodeljene',
-    'print_all_assigned'        => 'Natisni vse dodeljene',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Ime lokacije',
     'address'                   => 'Naslov',
     'address2'                   => 'Druga vrstica naslova',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Podpisal/a Je (finančni revizor):',
     'signed_by_location_manager' => 'Podpisal/a Je (lokacijski menedžer):',
     'signed_by'                 => 'Odpisal/a Je:',
+    'clone'  					=> 'Kloniraj lokacijo',
 ];

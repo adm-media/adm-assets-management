@@ -13,7 +13,8 @@ return [
     'create'                    => 'ساخت مکان',
     'update'                    => 'به روز رسانی منطقه مکانی',
     'print_assigned'            => 'چاپ موارد واگذار شده',
-    'print_all_assigned'        => 'چاپ همه موارد واگذار شده',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'نام منطقه مکانی',
     'address'                   => 'آدرس',
     'address2'                   => 'Address Line 2',
@@ -40,4 +41,5 @@ return [
     'signed_by_finance_auditor' => 'امضاء توسط (ممیز مالی):',
     'signed_by_location_manager' => 'امضاء توسط (ممیز مکانی):',
     'signed_by'                 => 'امضاء اختتام توسط:',
+    'clone'  					=> 'Clone Location',
 ];

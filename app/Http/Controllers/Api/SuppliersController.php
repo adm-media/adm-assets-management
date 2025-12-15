@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Suppliers\DestroySupplierAction;
+use App\Exceptions\ItemStillHasAccessories;
+use App\Exceptions\ItemStillHasComponents;
+use App\Exceptions\ItemStillHasConsumables;
+use App\Exceptions\ItemStillHasMaintenances;
+use App\Exceptions\ItemStillHasAssets;
+use App\Exceptions\ItemStillHasLicenses;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\SelectlistTransformer;
@@ -24,10 +31,15 @@ class SuppliersController extends Controller
     public function index(Request $request): array
     {
         $this->authorize('view', Supplier::class);
-        $allowed_columns = ['
-            id',
+        $allowed_columns = [
+            'id',
             'name',
             'address',
+            'address2',
+            'city',
+            'state',
+            'country',
+            'zip',
             'phone',
             'contact',
             'fax',
@@ -38,21 +50,25 @@ class SuppliersController extends Controller
             'accessories_count',
             'components_count',
             'consumables_count',
+            'tag_color',
             'url',
+            'notes',
         ];
         
         $suppliers = Supplier::select(
-                ['id', 'name', 'address', 'address2', 'city', 'state', 'country', 'fax', 'phone', 'email', 'contact', 'created_at', 'updated_at', 'deleted_at', 'image', 'notes', 'url'])
+                ['id', 'name', 'address', 'address2', 'city', 'state', 'country', 'fax', 'phone', 'email', 'contact', 'created_at', 'created_by', 'updated_at', 'deleted_at', 'image', 'notes', 'url', 'zip', 'tag_color'])
                     ->withCount('assets as assets_count')
                     ->withCount('licenses as licenses_count')
                     ->withCount('accessories as accessories_count')
                     ->withCount('components as components_count')
-                    ->withCount('consumables as consumables_count');
+                    ->withCount('consumables as consumables_count')
+                    ->with('adminuser');
 
 
         if ($request->filled('search')) {
-            $suppliers = $suppliers->TextSearch($request->input('search'));
+            $suppliers->TextSearch($request->input('search'));
         }
+
 
         if ($request->filled('name')) {
             $suppliers->where('name', '=', $request->input('name'));
@@ -100,7 +116,15 @@ class SuppliersController extends Controller
 
         $order = $request->input('order') === 'asc' ? 'asc' : 'desc';
         $sort = in_array($request->input('sort'), $allowed_columns) ? $request->input('sort') : 'created_at';
-        $suppliers->orderBy($sort, $order);
+
+        switch ($request->input('sort')) {
+            case 'created_by':
+                $suppliers->OrderByCreatedByName($order);
+                break;
+            default:
+                $suppliers->orderBy($sort, $order);
+                break;
+        }
 
         $total = $suppliers->count();
         $suppliers = $suppliers->skip($offset)->take($limit)->get();
@@ -175,26 +199,39 @@ class SuppliersController extends Controller
      * @since [v4.0]
      * @param  int  $id
      */
-    public function destroy($id) : JsonResponse
+    public function destroy(Supplier $supplier): JsonResponse
     {
-        $this->authorize('delete', Supplier::class);
-        $supplier = Supplier::with('asset_maintenances', 'assets', 'licenses')->withCount('asset_maintenances as asset_maintenances_count', 'assets as assets_count', 'licenses as licenses_count')->findOrFail($id);
         $this->authorize('delete', $supplier);
-
-
-        if ($supplier->assets_count > 0) {
-            return response()->json(Helper::formatStandardApiResponse('error', null, trans('admin/suppliers/message.delete.assoc_assets', ['asset_count' => (int) $supplier->assets_count])));
+        try {
+            DestroySupplierAction::run(supplier: $supplier);
+        } catch (ItemStillHasAssets $e) {
+            return response()->json(Helper::formatStandardApiResponse('error', null, trans('general.bulk_delete_associations.assoc_assets', [
+                'asset_count' => (int) $supplier->assets_count, 'item' => trans('general.supplier')
+            ])));
+        } catch (ItemStillHasMaintenances $e) {
+            return response()->json(Helper::formatStandardApiResponse('error', null, trans('general.bulk_delete_associations.assoc_maintenances', [
+                'asset_maintenances_count' => $supplier->asset_maintenances_count, 'item' => trans('general.supplier')
+            ])));
+        } catch (ItemStillHasLicenses $e) {
+            return response()->json(Helper::formatStandardApiResponse('error', null, trans('general.bulk_delete_associations.assoc_licenses', [
+                'licenses_count' => (int) $supplier->licenses_count, 'item' => trans('general.supplier')
+            ])));
+        } catch (ItemStillHasAccessories $e) {
+            return response()->json(Helper::formatStandardApiResponse('error', null, trans('general.bulk_delete_associations.assoc_accessories', [
+                'accessories_count' => (int) $supplier->accessories_count, 'item' => trans('general.supplier')
+            ])));
+        } catch (ItemStillHasConsumables $e) {
+            return response()->json(Helper::formatStandardApiResponse('error', null, trans('general.bulk_delete_associations.assoc_consumables', [
+                'consumables_count' => (int) $supplier->consumables_count, 'item' => trans('general.supplier')
+            ])));
+        } catch (ItemStillHasComponents $e) {
+            return response()->json(Helper::formatStandardApiResponse('error', null, trans('general.bulk_delete_associations.assoc_components', [
+                'components_count' => (int) $supplier->components_count, 'item' => trans('general.supplier')
+            ])));
+        } catch (\Exception $e) {
+            report($e);
+            return response()->json(Helper::formatStandardApiResponse('error', null, trans('general.something_went_wrong')));
         }
-
-        if ($supplier->asset_maintenances_count > 0) {
-            return response()->json(Helper::formatStandardApiResponse('error', null, trans('admin/suppliers/message.delete.assoc_maintenances', ['asset_maintenances_count' => $supplier->asset_maintenances_count])));
-        }
-
-        if ($supplier->licenses_count > 0) {
-            return response()->json(Helper::formatStandardApiResponse('error', null, trans('admin/suppliers/message.delete.assoc_licenses', ['licenses_count' => (int) $supplier->licenses_count])));
-        }
-
-        $supplier->delete();
 
         return response()->json(Helper::formatStandardApiResponse('success', null, trans('admin/suppliers/message.delete.success')));
     }
@@ -215,6 +252,7 @@ class SuppliersController extends Controller
             'id',
             'name',
             'image',
+            'tag_color',
         ]);
 
         if ($request->filled('search')) {

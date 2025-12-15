@@ -2,7 +2,7 @@
 
 return [
     'about_asset_depreciations'  			=> 'Über Asset-Abschreibungen',
-    'about_depreciations'  					=> 'Du kannst Asset-Abschreibungen einrichten, um Assets linear abzuschreiben.',
+    'about_depreciations'  					=> 'Du kannst Asset-Abschreibungen einrichten, um Vermögenswerte abzuwerten, basierend auf linearer Abschreibung, Halbjahr mit Bedingung oder Halbjahr immer angewendet.',
     'asset_depreciations'  					=> 'Asset-Abschreibungen',
     'create'  					            => 'Abschreibung erstellen',
     'depreciation_name'  					=> 'Abschreibungs Name',
@@ -13,4 +13,8 @@ return [
     'no_depreciations_warning'               => '<strong>Warnung: </strong>
                       Du hast derzeit keine Abschreibungen eingerichtet.
                       Bitte richte mindestens eine Abschreibung ein, um den Abschreibungsbericht anzuzeigen.',
+    'depreciation_method'                   => 'Abschreibungsbericht',
+    'linear_depreciation'                   => 'Linear (Standard)',
+    'half_1'                                => 'Halbjahreskonvention, immer angewendet',
+    'half_2'                                => 'Halbjahreskonvention, mit Bedingung angewendet',
 ];

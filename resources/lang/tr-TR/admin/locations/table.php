@@ -12,7 +12,8 @@ return [
     'create'                    => 'Konum Oluştur',
     'update'                    => 'Konum Güncelle',
     'print_assigned'            => 'Atananların Tümünü Yazdır',
-    'print_all_assigned'        => 'Atananların Tümünü Yazdır',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Konum Adı',
     'address'                   => 'Adres',
     'address2'                   => 'Adres Satırı 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'İmzalayan (Maliye Denetçisi):',
     'signed_by_location_manager' => 'İmzalayan (Mekan Sorumlusu):',
     'signed_by'                 => 'İmzalayan:',
+    'clone'  					=> 'Klon Konumu',
 ];

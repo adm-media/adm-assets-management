@@ -16,6 +16,7 @@ class IconHelper
             case 'clone':
                 return 'far fa-clone';
             case 'delete':
+            case 'upload deleted':
                 return 'fas fa-trash';
             case 'create':
                 return 'fa-solid fa-plus';
@@ -39,10 +40,14 @@ class IconHelper
                 return 'fa-solid fa-trash-arrow-up';
             case 'external-link':
                 return 'fa fa-external-link';
+            case 'link':
+                return 'fa fa-link';
             case 'email':
                 return 'fa-regular fa-envelope';
             case 'phone':
                 return 'fa-solid fa-phone';
+            case 'mobile':
+                return 'fas fa-mobile-screen-button';
             case 'long-arrow-right':
                 return 'fas fa-long-arrow-alt-right';
             case 'download':
@@ -151,6 +156,7 @@ class IconHelper
             case 'location':
                 return 'fas fa-map-marker-alt';
             case 'superadmin':
+            case 'admin':
                 return 'fas fa-crown';
             case 'print':
                 return 'fa-solid fa-print';
@@ -191,6 +197,10 @@ class IconHelper
             case 'note':
             case 'notes':
                 return 'fas fa-sticky-note';
+            case 'tip':
+                return 'fa-solid fa-lightbulb';
+            case 'highlight':
+                return 'fa-solid fa-highlighter';
         }
     }
 }

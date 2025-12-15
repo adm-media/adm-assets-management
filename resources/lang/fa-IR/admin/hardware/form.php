@@ -56,6 +56,8 @@ return [
     'redirect_to_checked_out_to'   => 'Go to Checked Out to',
     'select_statustype'	=> 'انتخاب نوع وضعیت',
     'serial'			=> 'سریال',
+    'serial_required'	=> 'Asset :number requires a serial number',
+    'serial_required_post_model_update'	=> ':asset_model have been updated to require a serial number. Please add a serial number for this asset.',
     'status'			=> 'وضعیت',
     'tag'				=> 'برچسب دارایی
 ',
@@ -70,8 +72,9 @@ return [
     'asset_location_update_actual' => 'Update only actual location',
     'asset_not_deployable' => 'این وضعیت دارایی قابل استقرار نیست. این دارایی قابل پذیرش نیست.',
     'asset_not_deployable_checkin' => 'That asset status is not deployable. Using this status label will checkin the asset.',
-    'asset_deployable' => 'این وضعیت دارایی قابل استقرار است. این دارایی قابل پذیرش است.',
+    'asset_deployable' => 'This asset can be checked out.',
     'processing_spinner' => 'Processing... (This might take a bit of time on large files)',
+    'processing' => 'در حال پردازش... ',
     'optional_infos'  => 'اطلاعات دلخواه
 ',
     'order_details'   => 'اطلاعات مربوط به سفارش

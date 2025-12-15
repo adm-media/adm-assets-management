@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Maak een nieuwe veldset aan',
     'create_field'            => 'Nieuw aangepast veld',
     'create_field_title' => 'Maak een nieuw aangepast veld',
-    'value_encrypted'      	        => 'De waarde van dit veld is versleuteld in de database. Alleen beheerders zullen de onversleutelde waarde kunnen weergeven.',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'De waarde van dit veld opnemen in de checkout e-mails die naar de gebruiker zijn verzonden? Versleutelde velden kunnen niet worden opgenomen in e-mails',
     'show_in_email_short' => 'Opnemen in e-mails',
     'help_text' => 'Help tekst',
@@ -59,5 +59,13 @@ return [
     'encrypted_options' => 'Dit veld is encrypted, dus sommige weergaveopties zullen niet beschikbaar zijn.',
     'display_checkin' => 'Display in checkin forms',
     'display_checkout' => 'Display in checkout forms',
-
+    'display_audit' => 'Display in audit forms',
+    'types' => [
+        'text' => 'Text Box',
+        'listbox' => 'List Box',
+        'textarea' => 'Textarea (multi-line)',
+        'checkbox' => 'Checkbox',
+        'radio' => 'Radio Buttons',
+    ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

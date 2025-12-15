@@ -83,7 +83,7 @@ class AssetIndexTest extends TestCase
 
     public function testAssetApiIndexReturnsDueForExpectedCheckin()
     {
-        Asset::factory()->count(3)->create(['assigned_to' => '1', 'expected_checkin' => Carbon::now()->format('Y-m-d')]);
+        Asset::factory()->count(3)->create(['assigned_to' => '1', 'assigned_type' => User::class, 'expected_checkin' => Carbon::now()->format('Y-m-d')]);
         
         $this->actingAsForApi(User::factory()->superuser()->create())
             ->getJson(
@@ -99,7 +99,7 @@ class AssetIndexTest extends TestCase
 
     public function testAssetApiIndexReturnsOverdueForExpectedCheckin()
     {
-        Asset::factory()->count(3)->create(['assigned_to' => '1', 'expected_checkin' => Carbon::now()->subDays(1)->format('Y-m-d')]);
+        Asset::factory()->count(3)->create(['assigned_to' => '1', 'assigned_type' => User::class, 'expected_checkin' => Carbon::now()->subDays(1)->format('Y-m-d')]);
         
         $this->actingAsForApi(User::factory()->superuser()->create())
             ->getJson(route('api.assets.list-upcoming', ['action' => 'checkins', 'upcoming_status' => 'overdue']))
@@ -113,8 +113,8 @@ class AssetIndexTest extends TestCase
 
     public function testAssetApiIndexReturnsDueOrOverdueForExpectedCheckin()
     {
-        Asset::factory()->count(3)->create(['assigned_to' => '1', 'expected_checkin' => Carbon::now()->subDays(1)->format('Y-m-d')]);
-        Asset::factory()->count(2)->create(['assigned_to' => '1', 'expected_checkin' => Carbon::now()->format('Y-m-d')]);
+        Asset::factory()->count(3)->create(['assigned_to' => '1', 'assigned_type' => User::class, 'expected_checkin' => Carbon::now()->subDays(1)->format('Y-m-d')]);
+        Asset::factory()->count(2)->create(['assigned_to' => '1', 'assigned_type' => User::class, 'expected_checkin' => Carbon::now()->format('Y-m-d')]);
         
         $this->actingAsForApi(User::factory()->superuser()->create())
             ->getJson(route('api.assets.list-upcoming', ['action' => 'checkins', 'upcoming_status' => 'due-or-overdue']))
@@ -170,5 +170,34 @@ class AssetIndexTest extends TestCase
             ->getJson(route('api.assets.index'))
             ->assertResponseDoesNotContainInRows($assetA, 'asset_tag')
             ->assertResponseContainsInRows($assetB, 'asset_tag');
+    }
+
+    public function test_gracefully_handles_malformed_filter()
+    {
+        $this->actingAsForApi(User::factory()->viewAssets()->create())
+            ->getJson(route('api.assets.index', [
+                // filter should be a json encoded array and not a string
+                'filter' => 'asset_tag:12345',
+            ]))
+            ->assertStatusMessageIs('error')
+            ->assertJson(function (AssertableJson $json) {
+                $json->has('messages.filter')->etc();
+            });
+    }
+
+    public function testReturnsResultViaFilter()
+    {
+
+        Asset::factory()->count(3)->create(['name' => 'MY AWESOME ASSET NAME']);
+        $this->actingAsForApi(User::factory()->viewAssets()->create())
+            ->getJson(route('api.assets.index', [
+                'filter' => '{"name":"MY AWESOME ASSET NAME"}',
+            ]))
+            ->assertOk()
+            ->assertJsonStructure([
+                'total',
+                'rows',
+            ])
+            ->assertJson(fn(AssertableJson $json) => $json->has('rows', 3)->etc());
     }
 }

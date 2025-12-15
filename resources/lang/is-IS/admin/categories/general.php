@@ -3,13 +3,15 @@
 return array(
     'asset_categories' 					=> 'Eignaflokkar',
     'category_name'  					=> 'Heiti Vöruflokks',
-    'checkin_email'                     => 'Senda tölvupóst til notenda til að skrá sig inn / út.',
+    'email_to_user_upon_checkin' => 'Send email to user upon checkin.',
+    'email_to_user_upon_checkin_and_checkout' => 'Send email to user upon checkin/checkout.',
+    'email_to_initiator'                => 'Send email to you when user accepts or declines checkout.',
     'checkin_email_notification'        => 'Þessi notandi fær tölvupóst til að skrá sig inn/út.',
     'clone'                             => 'Afrita Vöruflokk',
     'create'  							=> 'Stofna vöruflokk',
     'edit'                              => 'Breyta vöruflokk',
-    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user because the global EULA is being used.',
-    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user because a EULA is set for this category.',
+    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user upon checkout because the global EULA is being used.',
+    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user upon checkout because a EULA is set for this category.',
     'eula_text'							=> 'Vöruflokkur fyrir notendaskilmála',
     'eula_text_help'					=> 'Þessi reitur gerir þér kleift að sérsníða notendaskilmála fyrir ákveðinn búnað. Ef þú hefur aðeins einn notendaskilmála fyrir allan þinn búnað þá skaltu haka í reitinn fyrir neðan sem notar sömu skilmálana fyrir allann þann búnað.',
     'name'                              => 'Heiti vöruflokks',
@@ -21,5 +23,9 @@ return array(
     'use_default_eula'					=> 'Notaðu frekar <a href="#" data-toggle="modal" data-target="#eulaModal">',
     'use_default_eula_disabled'			=> '<del>Notaðu frekar sjálfgefna notendaskilmálana.</del>Sjálfgefnu notendaskilmálarnir eru ekki í notkun. Vinsamlegast bættu einhverjum notendaskilmálum við í undir "Stillingar"',
     'use_default_eula_column'			=> 'Use default EULA',
+    'import_require_acceptance'         => 'Require Acceptance',
+    'import_checkin_email'              => 'Send Checkin Email',
+    'import_eula_text'                  => 'EULA text',
+    'import_category_type'              => 'Category Type',
 
 );

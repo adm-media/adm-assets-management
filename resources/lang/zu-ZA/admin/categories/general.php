@@ -3,13 +3,15 @@
 return array(
     'asset_categories' 					=> 'Izigaba zefa',
     'category_name'  					=> 'Igama lesigaba',
-    'checkin_email'                     => 'Send email to user on checkin/checkout.',
+    'email_to_user_upon_checkin' => 'Send email to user upon checkin.',
+    'email_to_user_upon_checkin_and_checkout' => 'Send email to user upon checkin/checkout.',
+    'email_to_initiator'                => 'Send email to you when user accepts or declines checkout.',
     'checkin_email_notification'        => 'This user will be sent an email on checkin/checkout.',
     'clone'                             => 'Isigaba se-clone',
     'create'  							=> 'Dala Isigaba',
     'edit'                              => 'Hlela Isigaba',
-    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user because the global EULA is being used.',
-    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user because a EULA is set for this category.',
+    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user upon checkout because the global EULA is being used.',
+    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user upon checkout because a EULA is set for this category.',
     'eula_text'							=> 'Isigaba EULA',
     'eula_text_help'					=> 'Le nsimu ikuvumela ukuthi wenze ngezifiso ama-EULA akho ngezinhlobo ezithile zezimpahla. Uma unayo i-EULA eyodwa yezimpahla zakho zonke, ungabheka ibhokisi elingezansi ukuthi usebenzise okuzenzakalelayo okuzenzakalelayo.',
     'name'                              => 'Igama lesigaba',
@@ -21,5 +23,9 @@ return array(
     'use_default_eula'					=> 'Sebenzisa okungu-<a href="#" data-toggle="modal" data-target="#eulaModal">kuzenzakalela okuzenzakalelayo ku-EULA</a> kunalokho.',
     'use_default_eula_disabled'			=> '<del>Sebenzisa i-EULA eyinhloko yokuzenzakalela esikhundleni.</del> Ayikho i-EULA eyimilayezo eyisisekelo esethiwe. Sicela ungeze eyodwa kuzilungiselelo.',
     'use_default_eula_column'			=> 'Use default EULA',
+    'import_require_acceptance'         => 'Require Acceptance',
+    'import_checkin_email'              => 'Send Checkin Email',
+    'import_eula_text'                  => 'EULA text',
+    'import_category_type'              => 'Category Type',
 
 );

@@ -12,7 +12,8 @@ return [
     'create'                    => 'Standort erstellen',
     'update'                    => 'Standort aktualisieren',
     'print_assigned'            => 'Zugewiesene drucken',
-    'print_all_assigned'        => 'Alles Zugewiesene drucken',
+    'print_inventory'           => 'Inventar drucken',
+    'print_all_assigned'        => 'Inventar drucken und Zugewiesen',
     'name'                      => 'Standortname',
     'address'                   => 'Adresse',
     'address2'                   => 'Adresszeile 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Unterschrieben von (Finanzprüfer):',
     'signed_by_location_manager' => 'Unterschrieben von (Standortmanager):',
     'signed_by'                 => 'Unterschrieben von:',
+    'clone'  					=> 'Standort klonen',
 ];

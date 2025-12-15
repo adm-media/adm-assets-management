@@ -2,7 +2,7 @@
 
 return [
 
-    'undeployable' 		 => '<strong>Varovanie: </strong> Tento majetok bol označný ako neodovzdateľný. Ak došlo k zmene, prosím upravte aktuálny stav majetku.',
+    'undeployable' 		 => 'Nasledujúce majetky nie je možné odovzdať, preto boli odstránené z odovzdávania: :asset_tags',
     'does_not_exist' 	 => 'Majetok neexistuje.',
     'does_not_exist_var' => 'Majetok s označením :asset_tag nebol nájdený.',
     'no_tag' 	         => 'Nebolo zadané žiadne označenie majetku.',
@@ -19,6 +19,11 @@ return [
         'success_linked' => 'Majetok s označením :tag bol úspešne pridaný. <strong><a href=":link" style="color: white;">Kliknite sem pre zobrazenie</a></strong>.',
         'multi_success_linked' => 'Majetok s označením :links bol úspešne pridaný.|:count majetkov bolo úspešne pridaných :links.',
         'partial_failure' => 'Majetok sa nepodarilo pridať. Dôvod: :failuers|:count majetkov nebolo možné pridať. Dôvody: :failures',
+        'target_not_found' => [
+            'user' => 'Priradeného používateľa sa nepodarilo nájsť.',
+            'asset' => 'Priradený majetok sa nepodarilo nájsť.',
+            'location' => 'Priradenú lokalitu sa nepodarilo nájsť.',
+        ],
     ],
 
     'update' => [
@@ -66,13 +71,14 @@ return [
         'file_already_deleted' => 'Vybraný súbor už bol odstránený',
         'header_row_has_malformed_characters' => 'Jeden alebo viacero stĺpcov obsahujú poškodené UTF-8 znaky',
         'content_row_has_malformed_characters' => 'Jeden alebo viacero atribútov v prvom riadku obsahu obsahuje poškodené UTF-8 znaky',
+        'transliterate_failure' => 'Prepis z kódovania :encoding do UTF-8 zlyhal kvôli neplatným znakom vo vstupe'
     ],
 
 
     'delete' => [
         'confirm'   	=> 'Ste si istý, že chcete odstrániť tento majetok?',
         'error'   		=> 'Pri odstraňovaní majetku sa vyskytla chyba. Skúste prosím znovu.',
-        'assigned_to_error' => '{1}Asset Tag: :asset_tag is currently checked out. Check in this device before deletion.|[2,*]Asset Tags: :asset_tag are currently checked out. Check in these devices before deletion.',
+        'assigned_to_error' => '{1}Majetok: :asset_tag je odovzdaný. Prevezmite majetok pred zmazaním.|[2,*]Majetky : :asset_tag sú odovzdané. Prevezmite tieto majetky pred odmazaním.',
         'nothing_updated'   => 'Neboli zvolený žiadne položky majetku, preto nebolo nič odstránené.',
         'success' 		=> 'Majetok bol úspešne odstránený.',
     ],
@@ -99,9 +105,10 @@ return [
     ],
 
     'requests' => [
-        'error'   		=> 'Majetok nebol vyžiadaný, prosím skúste znovu',
-        'success' 		=> 'Majetok úspešne vyžiadaný.',
-        'canceled'      => 'Požiadavka na odovzdanie bola úspešne zrušená',
+        'error'   		=> 'Požiadavka nebola úspešná, skúste to znova.',
+        'success' 		=> 'Žiadosť bola úspešne odoslaná.',
+        'canceled'      => 'Žiadosť bola úspešne zrušená.',
+        'cancel'        => 'Zrušiť túto žiadosť o položku',
     ],
 
 ];

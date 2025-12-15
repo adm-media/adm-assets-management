@@ -5,7 +5,7 @@ return [
     'manage'                    => 'Uredi',
     'field'		                => 'Polje',
     'about_fieldsets_title'		=> 'O grupi polja',
-    'about_fieldsets_text'		=> 'Skupovi polja vam omogućavaju da kreirate grupe prilagođenih polja koja se često ponovo koriste za određene tipove modela sredstava.',
+    'about_fieldsets_text'		=> 'Skupovi polja vam omogućavaju da kreirate grupe prilagođenih polja koja se često ponovo koriste za određene tipove modela imovine.',
     'custom_format'             => 'Prilagodljivi Regex format...',
     'encrypt_field'      	        => 'Enkriptujte vrednost polja u bazi podataka',
     'encrypt_field_help'      => 'UPUZORENJE: Nije moguće pretraživati enkriptovana polja.',
@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Kreirajte novu grupu polja',
     'create_field'            => 'Novo prilagodjeno polje',
     'create_field_title' => 'Kreirajte prilagođeno polje',
-    'value_encrypted'      	        => 'Vrednost ovog polja je šifrovana u bazi podataka. Samo administratori će moći da vide dešifrovanu vrednost',
+    'value_encrypted'      	        => 'Vrednost ovog polja je enkriptovana u bazi podataka. Samo korisnici sa ovlašćenjem da pregledaju enkriptovana prilagođena polja će moći da vide dekriptovanu vrednost',
     'show_in_email'     => 'Uvrsti vrednost ovog polja u e-porukama zaduženja koja se šalju korisnicima? Enkriptovana polja se ne mogu uvrstiti u e-porukama',
     'show_in_email_short' => 'Uvrsti u e-poruke',
     'help_text' => 'Pomoćni tekst',
@@ -59,5 +59,13 @@ return [
     'encrypted_options' => 'Ovo polje je enkriptovano, zato neke opcije prikaza neće biti dostupne.',
     'display_checkin' => 'Prikaži u formularima razduživanja',
     'display_checkout' => 'Prikaži u formularima zaduživanja',
-
+    'display_audit' => 'Prikaži u formularu revizije',
+    'types' => [
+        'text' => 'Tekstualno polje',
+        'listbox' => 'Polje spiska',
+        'textarea' => 'Tekstualna oblast (više redova)',
+        'checkbox' => 'Polje za potvrdu',
+        'radio' => 'Dugmići izbora',
+    ],
+    'general_help_text' => 'Prilagođena polja skladište dodatne informacije koje nisu pokrivene podrazumevanim poljima imovine. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

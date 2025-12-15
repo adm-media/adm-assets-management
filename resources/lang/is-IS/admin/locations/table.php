@@ -12,7 +12,8 @@ return [
     'create'                    => 'Skrá staðsetningu',
     'update'                    => 'Uppfæra staðsetningu',
     'print_assigned'            => 'Prenta skráð',
-    'print_all_assigned'        => 'Prenta allt skráð',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Heiti staðsetningar',
     'address'                   => 'Heimilisfang',
     'address2'                   => 'Address Line 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Undirritað af (fulltrúa fjármáladeildar):',
     'signed_by_location_manager' => 'Undirritað af (fulltrúa forstöðumanns):',
     'signed_by'                 => 'Undirritað af By:',
+    'clone'  					=> 'Clone Location',
 ];

@@ -12,7 +12,8 @@ return [
     'create'                    => 'Magsagawa ng Lokasyon',
     'update'                    => 'I-update ang Lokasyon',
     'print_assigned'            => 'Print Assigned',
-    'print_all_assigned'        => 'I-print ang Lahat ng Nakatalaga',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Ang Pangalan ng Lokasyon',
     'address'                   => 'Ang Address',
     'address2'                   => 'Address Line 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Signed By (Finance Auditor):',
     'signed_by_location_manager' => 'Signed By (Location Manager):',
     'signed_by'                 => 'Signed Off By:',
+    'clone'  					=> 'Clone Location',
 ];

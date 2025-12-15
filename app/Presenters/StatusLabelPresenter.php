@@ -51,7 +51,7 @@ class StatusLabelPresenter extends Presenter
                 'switchable' => true,
                 'title' => trans('admin/statuslabels/table.color'),
                 'visible' => true,
-                'formatter' => 'colorSqFormatter',
+                'formatter' => 'colorTagFormatter',
             ],  [
                 'field' => 'show_in_nav',
                 'searchable' => false,
@@ -105,6 +105,7 @@ class StatusLabelPresenter extends Presenter
                 'switchable' => false,
                 'title' => trans('table.actions'),
                 'formatter' => 'statuslabelsActionsFormatter',
+                'printIgnore' => true,
             ],
         ];
 

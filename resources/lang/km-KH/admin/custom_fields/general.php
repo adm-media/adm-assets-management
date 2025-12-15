@@ -5,7 +5,7 @@ return [
     'manage'                    => 'គ្រប់គ្រង',
     'field'		                => 'វាល',
     'about_fieldsets_title'		=> 'អំពី Fieldsets',
-    'about_fieldsets_text'		=> 'Fieldsets អនុញ្ញាតឱ្យអ្នកបង្កើតក្រុមនៃវាលផ្ទាល់ខ្លួនដែលត្រូវបានប្រើឡើងវិញជាញឹកញាប់សម្រាប់ប្រភេទគំរូទ្រព្យសកម្មជាក់លាក់។',
+    'about_fieldsets_text'		=> 'Fieldsets allow you to create groups of custom fields that are frequently re-used used for specific asset model types.',
     'custom_format'             => 'ទម្រង់ Regex ផ្ទាល់ខ្លួន...',
     'encrypt_field'      	        => 'អ៊ិនគ្រីបតម្លៃនៃវាលនេះនៅក្នុងមូលដ្ឋានទិន្នន័យ',
     'encrypt_field_help'      => 'ការព្រមាន៖ ការអ៊ិនគ្រីបវាលធ្វើឱ្យវាមិនអាចស្វែងរកបាន។',
@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Create a new fieldset',
     'create_field'            => 'New Custom Field',
     'create_field_title' => 'Create a new custom field',
-    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only admin users will be able to view the decrypted value',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'Include the value of this field in checkout emails sent to the user? Encrypted fields cannot be included in emails',
     'show_in_email_short' => 'Include in emails',
     'help_text' => 'Help Text',
@@ -59,5 +59,13 @@ return [
     'encrypted_options' => 'Fieldនេះត្រូវបានអ៊ិនគ្រីប ដូច្នេះជម្រើសបង្ហាញមួយចំនួននឹងមិនមានទេ។',
     'display_checkin' => 'Display in checkin forms',
     'display_checkout' => 'Display in checkout forms',
-
+    'display_audit' => 'Display in audit forms',
+    'types' => [
+        'text' => 'Text Box',
+        'listbox' => 'List Box',
+        'textarea' => 'Textarea (multi-line)',
+        'checkbox' => 'Checkbox',
+        'radio' => 'Radio Buttons',
+    ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

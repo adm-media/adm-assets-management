@@ -12,7 +12,8 @@ return [
     'create'                    => 'Locatie aanmaken',
     'update'                    => 'Locatie bijwerken',
     'print_assigned'            => 'Print wat toegewezen is',
-    'print_all_assigned'        => 'Print alles wat toegewezen is',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Locatie naam',
     'address'                   => 'Adres',
     'address2'                   => 'Adresregel 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Ondertekend door (Asset Auditor):',
     'signed_by_location_manager' => 'Ondertekend door (Locatiebeheer):',
     'signed_by'                 => 'Afgetekend door:',
+    'clone'  					=> 'Clone Location',
 ];

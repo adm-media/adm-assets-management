@@ -12,7 +12,8 @@ return [
     'create'                    => 'Креирај локација',
     'update'                    => 'Ажурирај локација',
     'print_assigned'            => 'Доделено печатење',
-    'print_all_assigned'        => 'Печати задолжение',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Име на локација',
     'address'                   => 'Адреса',
     'address2'                   => 'Адреса 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Потпишано од (Финансиски ревизор):',
     'signed_by_location_manager' => 'Потпишано од (Менаџер за локација):',
     'signed_by'                 => 'Потпишано од:',
+    'clone'  					=> 'Clone Location',
 ];

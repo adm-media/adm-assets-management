@@ -12,7 +12,8 @@ return [
     'create'                    => 'Samee Goobta',
     'update'                    => 'Cusbooneysii Goobta',
     'print_assigned'            => 'Daabacaadda la qoondeeyay',
-    'print_all_assigned'        => 'Daabac Dhammaan kuwa la qoondeeyay',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Magaca Goobta',
     'address'                   => 'Cinwaanka',
     'address2'                   => 'Khadka Ciwaanka 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Waxaa saxiixay (Hantidhawraha Maaliyadda):',
     'signed_by_location_manager' => 'Waxaa saxiixay (Maamulaha Goobta):',
     'signed_by'                 => 'Saxiixay:',
+    'clone'  					=> 'Clone Location',
 ];

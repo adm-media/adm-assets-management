@@ -12,7 +12,8 @@ return [
     'create'                    => 'Създаване на местоположение',
     'update'                    => 'Обновяване на местоположение',
     'print_assigned'            => 'Печат',
-    'print_all_assigned'        => 'Печат на всички отдадени',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Местоположение',
     'address'                   => 'Aдрес',
     'address2'                   => 'Адрес ред 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Подписан от (счетоводител):',
     'signed_by_location_manager' => 'Подписан от (мениджър):',
     'signed_by'                 => 'Подписано от:',
+    'clone'  					=> 'Клонирай местоположението',
 ];

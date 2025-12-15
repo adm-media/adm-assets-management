@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Session;
 use \Illuminate\Contracts\View\View;
 use \Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;
 
 class AssetCheckoutController extends Controller
 {
@@ -36,6 +37,14 @@ class AssetCheckoutController extends Controller
                 ->with('error', trans('admin/hardware/general.model_invalid_fix'));
         }
 
+        // Invoke the validation to see if the audit will complete successfully
+        $asset->setRules($asset->getRules() + $asset->customFieldValidationRules());
+
+        if ($asset->isInvalid()) {
+            return redirect()->route('hardware.edit', $asset)->withErrors($asset->getErrors());
+        }
+
+        
         if ($asset->availableForCheckout()) {
             return view('hardware/checkout', compact('asset'))
                 ->with('statusLabel_list', Helper::deployableStatusLabelList())
@@ -56,6 +65,8 @@ class AssetCheckoutController extends Controller
      */
     public function store(AssetCheckoutRequest $request, $assetId) : RedirectResponse
     {
+
+
         try {
             // Check if the asset exists
             if (! $asset = Asset::find($assetId)) {
@@ -72,6 +83,7 @@ class AssetCheckoutController extends Controller
             $admin = auth()->user();
 
             $target = $this->determineCheckoutTarget();
+            session()->put(['checkout_to_type' => $target]);
 
             $asset = $this->updateAssetLocation($asset, $target);
 
@@ -114,7 +126,7 @@ class AssetCheckoutController extends Controller
             session()->put(['redirect_option' => $request->get('redirect_option'), 'checkout_to_type' => $request->get('checkout_to_type')]);
 
             if ($asset->checkOut($target, $admin, $checkout_at, $expected_checkin, $request->get('note'), $request->get('name'))) {
-                return redirect()->to(Helper::getRedirectOption($request, $asset->id, 'Assets'))
+                return Helper::getRedirectOption($request, $asset->id, 'Assets')
                     ->with('success', trans('admin/hardware/message.checkout.success'));
             }
             // Redirect to the asset management page with error

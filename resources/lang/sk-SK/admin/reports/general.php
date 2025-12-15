@@ -4,6 +4,7 @@ return [
     'info'   => 'Vyberte možnosti pre váš report majetku.',
     'deleted_user' => 'Zmazaní používatelia',
     'send_reminder' => 'Poslať pripomienku',
+    'cannot_send_reminder' => 'Používateľ bol vymazaný alebo nemá e-mailovú adresu, takže nemôže dostávať pripomienku',
     'reminder_sent' => 'Pripomienka zaslaná',
     'acceptance_deleted' => 'Požiadavka na akceptáciu odstránená',
     'acceptance_request' => 'Požiadavka na akceptáciu',

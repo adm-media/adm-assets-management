@@ -12,7 +12,8 @@ return [
     'create'                    => 'Uusi sijainti',
     'update'                    => 'Päivitä sijainti',
     'print_assigned'            => 'Tulosta luovutetut',
-    'print_all_assigned'        => 'Tulosta kaikki luovutetut',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Sijainnin nimi',
     'address'                   => 'Osoite',
     'address2'                   => 'Osoiterivi 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Allekirjoittaja (rahoitustarkastaja):',
     'signed_by_location_manager' => 'Allekirjoittanut (Sijaintipäällikkö):',
     'signed_by'                 => 'Luovuttanut:',
+    'clone'  					=> 'Clone Location',
 ];

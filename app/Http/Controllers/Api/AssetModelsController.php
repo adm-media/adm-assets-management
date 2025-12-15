@@ -46,10 +46,20 @@ class AssetModelsController extends Controller
                 'manufacturer',
                 'requestable',
                 'assets_count',
+                'assets_assigned_count',
+                'assets_archived_count',
+                'remaining',
                 'category',
                 'fieldset',
                 'deleted_at',
                 'updated_at',
+                'require_serial',
+                // These are *relationships* so we wouldn't normally include them in this array,
+                // since they would normally create a `column not found` error,
+                // BUT we account for them in the ordering switch down at the end of this method
+                // DO NOT ADD ANYTHING TO THIS LIST WITHOUT CHECKING THE ORDERING SWITCH BELOW!
+                'manufacturer',
+                'category',
             ];
 
         $assetmodels = AssetModel::select([
@@ -69,9 +79,31 @@ class AssetModelsController extends Controller
             'models.fieldset_id',
             'models.deleted_at',
             'models.updated_at',
+            'models.require_serial'
          ])
             ->with('category', 'depreciation', 'manufacturer', 'fieldset.fields.defaultValues', 'adminuser')
-            ->withCount('assets as assets_count');
+            ->withCount('assets as assets_count')
+            ->withCount('availableAssets as remaining')
+            ->withCount('assignedAssets as assets_assigned_count')
+            ->withCount('archivedAssets as assets_archived_count');
+
+        $filter = [];
+
+        if ($request->filled('filter')) {
+            $filter = json_decode($request->input('filter'), true);
+
+            $filter = array_filter($filter, function ($key) use ($allowed_columns) {
+                return in_array($key, $allowed_columns);
+            }, ARRAY_FILTER_USE_KEY);
+
+        }
+
+        if ((! is_null($filter)) && (count($filter)) > 0) {
+            $assetmodels->ByFilter($filter);
+        } elseif ($request->filled('search')) {
+            $assetmodels->TextSearch($request->input('search'));
+        }
+
 
         if ($request->input('status')=='deleted') {
             $assetmodels->onlyTrashed();
@@ -84,6 +116,12 @@ class AssetModelsController extends Controller
         if ($request->filled('model_number')) {
             $assetmodels = $assetmodels->where('models.model_number', '=', $request->input('model_number'));
         }
+
+        if ($request->input('requestable') == 'true') {
+            $assetmodels = $assetmodels->where('models.requestable', '=', '1');
+        } elseif ($request->input('requestable') == 'false') {
+            $assetmodels = $assetmodels->where('models.requestable', '=', '0');
+        }        
 
         if ($request->filled('notes')) {
             $assetmodels = $assetmodels->where('models.notes', '=', $request->input('notes'));
@@ -148,7 +186,7 @@ class AssetModelsController extends Controller
         $assetmodel = $request->handleImages($assetmodel);
 
         if ($assetmodel->save()) {
-            return response()->json(Helper::formatStandardApiResponse('success', $assetmodel, trans('admin/models/message.create.success')));
+            return response()->json(Helper::formatStandardApiResponse('success', (new AssetModelsTransformer)->transformAssetModel($assetmodel), trans('admin/models/message.create.success')));
         }
         return response()->json(Helper::formatStandardApiResponse('error', null, $assetmodel->getErrors()));
 
@@ -201,7 +239,7 @@ class AssetModelsController extends Controller
         $assetmodel = AssetModel::findOrFail($id);
         $assetmodel->fill($request->all());
         $assetmodel = $request->handleImages($assetmodel);
-        
+
         /**
          * Allow custom_fieldset_id to override and populate fieldset_id.
          * This is stupid, but required for legacy API support.
@@ -216,7 +254,7 @@ class AssetModelsController extends Controller
 
 
         if ($assetmodel->save()) {
-            return response()->json(Helper::formatStandardApiResponse('success', $assetmodel, trans('admin/models/message.update.success')));
+            return response()->json(Helper::formatStandardApiResponse('success', (new AssetModelsTransformer)->transformAssetModel($assetmodel), trans('admin/models/message.update.success')));
         }
 
         return response()->json(Helper::formatStandardApiResponse('error', null, $assetmodel->getErrors()));

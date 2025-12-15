@@ -12,7 +12,8 @@ return [
     'create'                    => 'Opprett plassering',
     'update'                    => 'Oppdater plassering',
     'print_assigned'            => 'Skriv ut tilordnede',
-    'print_all_assigned'        => 'Skriv ut alle tilordnede',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Plasseringsnavn',
     'address'                   => 'Adresse',
     'address2'                   => 'Adresselinje 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Undertegnet av (finansrevisor):',
     'signed_by_location_manager' => 'Signert av (Stedsansvarlig):',
     'signed_by'                 => 'Signert av:',
+    'clone'  					=> 'Clone Location',
 ];

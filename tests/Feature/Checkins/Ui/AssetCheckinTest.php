@@ -86,7 +86,7 @@ class AssetCheckinTest extends TestCase
 
         Event::assertDispatched(function (CheckoutableCheckedIn $event) use ($currentTimestamp) {
             // this could be better mocked but is ok for now.
-            return Carbon::parse($event->action_date)->diffInSeconds($currentTimestamp) < 2;
+            return (int) Carbon::parse($event->action_date)->diffInSeconds($currentTimestamp, true) < 2;
         }, 1);
     }
 
@@ -102,6 +102,7 @@ class AssetCheckinTest extends TestCase
             ->post(route('hardware.checkin.store', [$asset]));
 
         $this->assertTrue($asset->refresh()->location()->is($rtdLocation));
+        $this->assertHasTheseActionLogs($asset, ['create', 'checkin from']);
     }
 
     public function testDefaultLocationCanBeUpdatedUponCheckin()

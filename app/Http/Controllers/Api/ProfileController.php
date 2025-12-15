@@ -4,15 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Transformers\ProfileTransformer;
 use App\Models\CheckoutRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\TokenRepository;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Support\Facades\Gate;
 use App\Models\CustomField;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProfileController extends Controller
 {
@@ -65,7 +70,7 @@ class ProfileController extends Controller
             if ($checkoutRequest && $checkoutRequest->itemRequested()) {
                 $assets = [
                     'image' => e($checkoutRequest->itemRequested()->present()->getImageUrl()),
-                    'name' => e($checkoutRequest->itemRequested()->present()->name()),
+                    'name' => e($checkoutRequest->itemRequested()->display_name),
                     'type' => e($checkoutRequest->itemType()),
                     'qty' => (int) $checkoutRequest->quantity,
                     'location' => ($checkoutRequest->location()) ? e($checkoutRequest->location()->name) : null,
@@ -167,6 +172,29 @@ class ProfileController extends Controller
 
     }
 
+    /**
+     * Display the EULAs accepted by the user.
+     *
+     *  @param \App\Http\Transformers\ActionlogsTransformer $transformer
+     *  @return \Illuminate\Http\JsonResponse
+     *@since [v8.1.16]
+     * @author [Godfrey Martinez] [<gmartinez@grokability.com>]
+     */
+    public function eulas(ProfileTransformer $transformer, Request $request)
+    {
+        if($request->filled('user_id') && $request->input('user_id') != 0) {
+            // Return selected user's EULAs
+            $eulas = User::find($request->input('user_id'))->eulas;
+        }
+        else {
+            // Only return this user's EULAs
+            $eulas = auth()->user()->eulas;
+        }
+
+        return response()->json(
+            $transformer->transformFiles($eulas, $eulas->count())
+        );
+    }
 
 
 }

@@ -5,7 +5,7 @@ return [
     'manage'                    => 'Administrer',
     'field'		                => 'Felt',
     'about_fieldsets_title'		=> 'Om Feltsett',
-    'about_fieldsets_text'		=> 'Feltsett lar deg opprette grupper av egendefinerte felt som kan gjenbrukes til bestemte modelltyper.',
+    'about_fieldsets_text'		=> 'Feltsett lar deg opprette grupper av egendefinerte felt som ofte gjenbrukes brukes til bestemte modelltyper.',
     'custom_format'             => 'Tilpasset Regex-format...',
     'encrypt_field'      	        => 'Kryptere verdien av dette feltet i databasen',
     'encrypt_field_help'      => 'ADVARSEL: Ved å kryptere et felt gjør du at det ikke kan søkes på.',
@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Opprett et nytt feltsett',
     'create_field'            => 'Nytt Egendefinert Felt',
     'create_field_title' => 'Opprett nytt egendefinert felt',
-    'value_encrypted'      	        => 'Verdien i dette feltet er kryptert i databasen. Bare administratorer kan se hva som står i dette feltet',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'Inkluder verdien i dette feltet i utsjekkseposter sendt til brukeren? Krypterte felter kan ikke inkluderes i eposter',
     'show_in_email_short' => 'Inkludere i epost',
     'help_text' => 'Hjelpetekst',
@@ -59,5 +59,13 @@ return [
     'encrypted_options' => 'Feltet er kryptert, så noen visningsalternativer er ikke tilgjengelig.',
     'display_checkin' => 'Display in checkin forms',
     'display_checkout' => 'Display in checkout forms',
-
+    'display_audit' => 'Display in audit forms',
+    'types' => [
+        'text' => 'Text Box',
+        'listbox' => 'List Box',
+        'textarea' => 'Textarea (multi-line)',
+        'checkbox' => 'Checkbox',
+        'radio' => 'Radio Buttons',
+    ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

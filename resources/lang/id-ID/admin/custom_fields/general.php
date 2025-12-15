@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Buat fieldset baru',
     'create_field'            => 'Tambah Kolom Ubahan',
     'create_field_title' => 'Buat field kustom',
-    'value_encrypted'      	        => 'Nilai dari kolom ini di database dienkripsi. hanya pengguna admin yang bisa melihat nilai deskripsinya',
+    'value_encrypted'      	        => 'Nilai ini dienkripsi di database. Hanya pengguna yang memiliki izin untuk melihat terenkripsi yang dapat melihat nilai yang didekripsi',
     'show_in_email'     => 'Sertakan nilai bidang ini dalam email checkout yang dikirim kepada pengguna? Bidang terenkripsi tidak dapat dimasukkan dalam email',
     'show_in_email_short' => 'Sertakan dalam email',
     'help_text' => 'Teks bantuan',
@@ -57,7 +57,15 @@ return [
     'show_in_requestable_list_short' => 'Tampilkan di daftar aset yang dapat diminta',
     'show_in_requestable_list' => 'Tampilkan nilai di daftar aset yang dapat diminta. Kolom yang dienkripsi tidak akan ditampilkan',
     'encrypted_options' => 'Kolom ini dienkripsi, sehingga beberapa opsi tampilan tidak akan tersedia.',
-    'display_checkin' => 'Display in checkin forms',
-    'display_checkout' => 'Display in checkout forms',
-
+    'display_checkin' => 'Tampil formulir checkin',
+    'display_checkout' => 'Tampil formulir checkout',
+    'display_audit' => 'Tampil formulir audit',
+    'types' => [
+        'text' => 'Kotak teks',
+        'listbox' => 'Kotak list',
+        'textarea' => 'Area teks (beberapa baris)',
+        'checkbox' => 'Kotak check',
+        'radio' => 'Tombol radio',
+    ],
+    'general_help_text' => 'Bidang kustom menyimpan informasi tambahan yang tidak tercakup aset default.. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

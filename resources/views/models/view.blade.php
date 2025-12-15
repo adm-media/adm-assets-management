@@ -54,7 +54,7 @@
                         </span>
                         <span class="hidden-xs hidden-sm">
                             {{ trans('general.assets') }}
-                            {!! ($model->assets()->AssetsForShow()->count() > 0 ) ? '<badge class="badge badge-secondary">'.number_format($model->assets()->AssetsForShow()->count()).'</badge>' : '' !!}
+                            {!! ($model->assets()->AssetsForShow()->count() > 0 ) ? '<span class="badge badge-secondary">'.number_format($model->assets()->AssetsForShow()->count()).'</span>' : '' !!}
                         </span>
                     </a>
                 </li>
@@ -67,7 +67,7 @@
                         </span>
                         <span class="hidden-xs hidden-sm">
                             {{ trans('general.files') }}
-                            {!! ($model->uploads->count() > 0 ) ? '<badge class="badge badge-secondary">'.number_format($model->uploads->count()).'</badge>' : '' !!}
+                            {!! ($model->uploads->count() > 0 ) ? '<span class="badge badge-secondary">'.number_format($model->uploads->count()).'</span>' : '' !!}
                           </span>
                     </a>
                 </li>
@@ -87,19 +87,14 @@
 
                     <table
                             data-columns="{{ \App\Presenters\AssetPresenter::dataTableLayout() }}"
+                            data-show-columns-search="true"
                             data-cookie-id-table="assetListingTable"
-                            data-pagination="true"
                             data-id-table="assetListingTable"
-                            data-search="true"
                             data-side-pagination="server"
-                            data-show-columns="true"
-                            data-show-fullscreen="true"
+                            data-show-footer="true"
                             data-toolbar="#assetsBulkEditToolbar"
                             data-bulk-button-id="#bulkAssetEditButton"
                             data-bulk-form-id="#assetsBulkForm"
-                            data-click-to-select="true"
-                            data-show-export="true"
-                            data-show-refresh="true"
                             data-sort-order="asc"
                             id="assetListingTable"
                             data-url="{{ route('api.assets.index',['model_id'=> $model->id]) }}"
@@ -117,11 +112,7 @@
                     <div class="row">
                         <div class="col-md-12">
 
-                            <x-filestable
-                                    filepath="private_uploads/assetmodels/"
-                                    showfile_routename="show/modelfile"
-                                    deletefile_routename="delete/modelfile"
-                                    :object="$model" />
+                            <x-filestable object_type="models" :object="$model" />
 
                         </div> <!-- /.col-md-12 -->
                     </div> <!-- /.row -->
@@ -153,23 +144,11 @@
 
                 <ul class="list-unstyled" style="line-height: 25px;">
                     @if ($model->category)
-                        <li>{{ trans('general.category') }}:
+                        <li>
+                            <strong>{{ trans('general.category') }}</strong>:
                             <a href="{{ route('categories.show', $model->category->id) }}">{{ $model->category->name }}</a>
                         </li>
                     @endif
-
-                    @if ($model->created_at)
-                        <li>{{ trans('general.created_at') }}:
-                            {{ Helper::getFormattedDateObject($model->created_at, 'datetime', false) }}
-                        </li>
-                    @endif
-
-                    @if ($model->adminuser)
-                        <li>{{ trans('general.created_by') }}:
-                            {{ $model->adminuser->present()->name() }}
-                        </li>
-                    @endif
-
                     @if ($model->deleted_at)
                         <li>
                             <strong>
@@ -183,14 +162,15 @@
                     @endif
 
                     @if ($model->min_amt)
-                        <li>{{ trans('general.min_amt') }}:
+                        <li>
+                            <strong>{{ trans('general.min_amt') }}</strong>:
                            {{$model->min_amt }}
                         </li>
                     @endif
 
                     @if ($model->manufacturer)
                         <li>
-                            {{ trans('general.manufacturer') }}:
+                            <strong>{{ trans('general.manufacturer') }}</strong>:
                             @can('view', \App\Models\Manufacturer::class)
                                 <a href="{{ route('manufacturers.show', $model->manufacturer->id) }}">
                                     {{ $model->manufacturer->name }}
@@ -228,46 +208,56 @@
                     @endif
                     @if ($model->model_number)
                         <li>
-                            {{ trans('general.model_no') }}:
+                            <strong>{{ trans('general.model_no') }}</strong>:
                             {{ $model->model_number }}
                         </li>
                     @endif
 
                     @if ($model->depreciation)
                         <li>
-                            {{ trans('general.depreciation') }}:
+                            <strong>{{ trans('general.depreciation') }}</strong>:
                             {{ $model->depreciation->name }} ({{ $model->depreciation->months.' '.trans('general.months')}})
                         </li>
                     @endif
 
                     @if ($model->eol)
-                        <li>{{ trans('general.eol') }}:
+                        <li>
+                            <strong>{{ trans('general.eol') }}</strong>:
                             {{ $model->eol .' '. trans('general.months') }}
                         </li>
                     @endif
 
                     @if ($model->fieldset)
-                        <li>{{ trans('admin/models/general.fieldset') }}:
+                        <li>
+                            <strong>{{ trans('admin/models/general.fieldset') }}</strong>:
                             <a href="{{ route('fieldsets.show', $model->fieldset->id) }}">{{ $model->fieldset->name }}</a>
                         </li>
                     @endif
 
                     @if ($model->notes)
                         <li>
-                            {{ trans('general.notes') }}:
+                            <strong>{{ trans('general.notes') }}</strong>:
                             {!! nl2br(Helper::parseEscapedMarkedownInline($model->notes)) !!}
                         </li>
                     @endif
 
-                </ul>
+                        @if ($model->created_at)
+                            <li>
+                                <strong>{{ trans('general.created_at') }}</strong>:
+                                {{ Helper::getFormattedDateObject($model->created_at, 'datetime', false) }}
+                            </li>
+                        @endif
 
-                @if ($model->note)
-                    Notes:
-                    <p>
-                        {!! $model->present()->note() !!}
-                    </p>
-                @endif
-            </div>
+                        @if ($model->adminuser)
+                            <li>
+                                <strong>{{ trans('general.created_by') }}</strong>:
+                                {{ $model->adminuser->display_name }}
+                            </li>
+                        @endif
+
+
+                </ul>
+                </div>
         </div>
         </div>
             @can('update', \App\Models\AssetModel::class)
@@ -305,7 +295,7 @@
                             {{ trans('general.delete') }}
                         </button>
                     @else
-                        <button class="btn btn-block btn-sm btn-danger btn-social delete-asset" data-toggle="modal" title="{{ trans('general.delete_what', ['item'=> trans('general.asset_model')]) }}" data-content="{{ trans('general.sure_to_delete_var', ['item' => $model->name]) }}" data-target="#dataConfirmModal" data-tooltip="true"  data-placement="top" data-title="{{ trans('general.delete_what', ['item'=> trans('general.asset_model')]) }}">
+                        <button class="btn btn-block btn-sm btn-danger btn-social delete-asset" data-toggle="modal" title="{{ trans('general.delete_what', ['item'=> trans('general.asset_model')]) }}" data-content="{{ trans('general.sure_to_delete_var', ['item' => $model->name]) }}" data-target="#dataConfirmModal" data-tooltip="true" data-icon="fa fa-trash" data-placement="top" data-title="{{ trans('general.delete_what', ['item'=> trans('general.asset_model')]) }}" onClick="return false;">
                             <x-icon type="delete" />
                             {{ trans('general.delete') }}
                         </button>
@@ -322,15 +312,6 @@
 @stop
 
 @section('moar_scripts')
-
-        <script>
-            $('#dataConfirmModal').on('show.bs.modal', function (event) {
-                var content = $(event.relatedTarget).data('content');
-                var title = $(event.relatedTarget).data('title');
-                $(this).find(".modal-body").text(content);
-                $(this).find(".modal-header").text(title);
-            });
-        </script>
 
     @include ('partials.bootstrap-table', ['exportFile' => 'manufacturer' . $model->name . '-export', 'search' => false])
 

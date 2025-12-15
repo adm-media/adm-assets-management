@@ -3,13 +3,15 @@
 return array(
     'asset_categories' 					=> 'Laitekategoriat',
     'category_name'  					=> 'Kategorian nimi',
-    'checkin_email'                     => 'Lähetä käyttäjälle sähköposti palautuksesta/luovutuksesta.',
+    'email_to_user_upon_checkin' => 'Send email to user upon checkin.',
+    'email_to_user_upon_checkin_and_checkout' => 'Send email to user upon checkin/checkout.',
+    'email_to_initiator'                => 'Send email to you when user accepts or declines checkout.',
     'checkin_email_notification'        => 'Tälle käyttäjälle lähetetään sähköpostia palautuksesta/luovutuksesta.',
     'clone'                             => 'Monista kategoria',
     'create'  							=> 'Uusi kategoria',
     'edit'                              => 'Muokkaa kategoriaa',
-    'email_will_be_sent_due_to_global_eula' => 'Käyttäjälle lähetetään sähköposti, koska käytössä on maailmanlaajuista EULA-järjestelmää.',
-    'email_will_be_sent_due_to_category_eula' => 'Käyttäjälle lähetetään sähköposti, koska EULA on asetettu tähän kategoriaan.',
+    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user upon checkout because the global EULA is being used.',
+    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user upon checkout because a EULA is set for this category.',
     'eula_text'							=> 'Kategorian käyttöehdot',
     'eula_text_help'					=> 'Tässä kentässä voit muokata käyttöehtoja tietyn tyyppisille laitteille. Jos haluat käyttää vain yleisiä käyttöehtoja, voit valita ne käyttöön alta.',
     'name'                              => 'Kategorian nimi',
@@ -21,5 +23,9 @@ return array(
     'use_default_eula'					=> 'Käytä <a href="#" data-toggle="modal" data-target="#eulaModal"> yleisiä käyttöehtoja</a>.',
     'use_default_eula_disabled'			=> '<del>Käytä yleisiä käyttöehtoja.</del> Yleisiä käyttöehtoja ei ole määritetty. Voit lisätä ne asetuksista.',
     'use_default_eula_column'			=> 'Käytä yleisiä käyttöehtoja',
+    'import_require_acceptance'         => 'Require Acceptance',
+    'import_checkin_email'              => 'Send Checkin Email',
+    'import_eula_text'                  => 'EULA text',
+    'import_category_type'              => 'Category Type',
 
 );

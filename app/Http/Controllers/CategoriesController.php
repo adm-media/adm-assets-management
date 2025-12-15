@@ -2,6 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Categories\DestroyCategoryAction;
+use App\Exceptions\ItemStillHasAccessories;
+use App\Exceptions\ItemStillHasAssetModels;
+use App\Exceptions\ItemStillHasAssets;
+use App\Exceptions\ItemStillHasChildren;
+use App\Exceptions\ItemStillHasComponents;
+use App\Exceptions\ItemStillHasConsumables;
+use App\Exceptions\ItemStillHasLicenses;
 use App\Helpers\Helper;
 use App\Http\Requests\ImageUploadRequest;
 use App\Models\Category;
@@ -68,7 +76,9 @@ class CategoriesController extends Controller
         $category->eula_text = $request->input('eula_text');
         $category->use_default_eula = $request->input('use_default_eula', '0');
         $category->require_acceptance = $request->input('require_acceptance', '0');
+        $category->alert_on_response = $request->input('alert_on_response', '0');
         $category->checkin_email = $request->input('checkin_email', '0');
+        $category->tag_color  = $request->input('tag_color');
         $category->notes = $request->input('notes');
         $category->created_by = auth()->id();
 
@@ -121,7 +131,9 @@ class CategoriesController extends Controller
         $category->eula_text = $request->input('eula_text');
         $category->use_default_eula = $request->input('use_default_eula', '0');
         $category->require_acceptance = $request->input('require_acceptance', '0');
+        $category->alert_on_response = $request->input('alert_on_response', '0');
         $category->checkin_email = $request->input('checkin_email', '0');
+        $category->tag_color  = $request->input('tag_color');
         $category->notes = $request->input('notes');
 
         $category = $request->handleImages($category);
@@ -141,21 +153,18 @@ class CategoriesController extends Controller
      * @since [v1.0]
      * @param int $categoryId
      */
-    public function destroy($categoryId) : RedirectResponse
+    public function destroy(Category $category): RedirectResponse
     {
         $this->authorize('delete', Category::class);
-        // Check if the category exists
-        if (is_null($category = Category::findOrFail($categoryId))) {
-            return redirect()->route('categories.index')->with('error', trans('admin/categories/message.not_found'));
+        try {
+            DestroyCategoryAction::run($category);
+        } catch (ItemStillHasChildren $e) {
+            return redirect()->route('categories.index')->with('error', trans('general.bulk_delete_associations.general_assoc_warning', ['item' => trans('general.category')]));
+        } catch (\Exception $e) {
+            report($e);
+            return redirect()->route('categories.index')->with('error', trans('admin/categories/message.delete.error'));
         }
 
-        if (! $category->isDeletable()) {
-            return redirect()->route('categories.index')->with('error', trans('admin/categories/message.assoc_items', ['asset_type'=> $category->category_type]));
-        }
-
-        Storage::disk('public')->delete('categories'.'/'.$category->image);
-        $category->delete();
-        // Redirect to the locations management page
         return redirect()->route('categories.index')->with('success', trans('admin/categories/message.delete.success'));
     }
 

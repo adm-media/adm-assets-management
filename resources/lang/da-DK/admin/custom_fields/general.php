@@ -5,7 +5,7 @@ return [
     'manage'                    => 'Administrer',
     'field'		                => 'Felt',
     'about_fieldsets_title'		=> 'Om Feltsæt',
-    'about_fieldsets_text'		=> 'Feltsæt giver dig mulighed for at oprette grupper af brugerdefinerede felter, der ofte genbruges til specifikke asset-modeltyper.',
+    'about_fieldsets_text'		=> 'Fieldsets giver dig mulighed for at oprette grupper af brugerdefinerede felter, der ofte bruges igen til specifikke aktivmodeltyper.',
     'custom_format'             => 'Tilpasset Regex format...',
     'encrypt_field'      	        => 'Kryptere værdien af dette felt i databasen',
     'encrypt_field_help'      => 'Advarsel: Kryptere et felt gør det uransagelige.',
@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Opret et nyt feltsæt',
     'create_field'            => 'Nyt Brugerdefinerede Felt',
     'create_field_title' => 'Opret et nyt brugerdefineret felt',
-    'value_encrypted'      	        => 'Værdien af dette felt er krypteret i databasen. Kun admins vil være i stand til at se den krypteret værdi',
+    'value_encrypted'      	        => 'The value of this field is encrypted in the database. Only users with permission to view encrypted custom fields will be able to view the decrypted value',
     'show_in_email'     => 'Inkludér værdien af ​​dette felt i tjekud-e-mail til brugeren? Krypterede felter kan ikke medtages i e-mails',
     'show_in_email_short' => 'Inkluder i e-mails',
     'help_text' => 'Hjælp Tekst',
@@ -59,5 +59,13 @@ return [
     'encrypted_options' => 'Dette felt er krypteret, så nogle visningsindstillinger vil ikke være tilgængelige.',
     'display_checkin' => 'Display in checkin forms',
     'display_checkout' => 'Display in checkout forms',
-
+    'display_audit' => 'Display in audit forms',
+    'types' => [
+        'text' => 'Text Box',
+        'listbox' => 'List Box',
+        'textarea' => 'Textarea (multi-line)',
+        'checkbox' => 'Checkbox',
+        'radio' => 'Radio Buttons',
+    ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

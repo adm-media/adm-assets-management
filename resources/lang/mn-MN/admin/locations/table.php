@@ -12,7 +12,8 @@ return [
     'create'                    => 'Байршлыг үүсгэх нь',
     'update'                    => 'Байршлын мэдээллийг шинэчлэх',
     'print_assigned'            => 'Print Assigned',
-    'print_all_assigned'        => 'Бүх хуваарилагдсан хөрөнгийг хэвлэх',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Байршил нэр',
     'address'                   => 'Хаяг',
     'address2'                   => 'Address Line 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Signed By (Finance Auditor):',
     'signed_by_location_manager' => 'Signed By (Location Manager):',
     'signed_by'                 => 'Signed Off By:',
+    'clone'  					=> 'Clone Location',
 ];

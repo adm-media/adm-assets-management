@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Yeni bir alan kümesi oluştur',
     'create_field'            => 'Yeni özel alan',
     'create_field_title' => 'Yeni bir özel alan oluştur',
-    'value_encrypted'      	        => 'Bu alanın değeri veritabanında şifrelidir. Yalnızca yönetici kullanıcıları şifresi çözülen değeri görüntüleyebilir',
+    'value_encrypted'      	        => 'Bu alanın değeri veritabanında şifrelidir. Yalnızca yönetici kullanıcıları şifresi çözülen değeri görüntüleyebilir.',
     'show_in_email'     => 'Bu hane içerisindeki bilgi "Zimmet e-postası" içerisinde kullanıcıya gönderilsinmi? Şifrelenmiş hanelerin içerisindeki bilgiler gönderilemez.',
     'show_in_email_short' => 'E-postalara dahil edin',
     'help_text' => 'Yardım Metni',
@@ -57,7 +57,15 @@ return [
     'show_in_requestable_list_short' => 'Talep edilebilir varlıklar listesinde göster',
     'show_in_requestable_list' => 'Değeri talep edilebilir varlıklar listesinde gösterin. Şifreli alanlar gösterilmeyecek',
     'encrypted_options' => 'Bu alan şifrelendiğinden bazı görüntüleme seçenekleri kullanılamayacaktır.',
-    'display_checkin' => 'Display in checkin forms',
-    'display_checkout' => 'Display in checkout forms',
-
+    'display_checkin' => 'Teslimat formlarında görüntüle',
+    'display_checkout' => 'Çıkış formlarında görüntüle',
+    'display_audit' => 'Denetim formlarında görüntüle',
+    'types' => [
+        'text' => 'Metin Kutusu',
+        'listbox' => 'Seçenek Listesi',
+        'textarea' => 'Metin Alanı',
+        'checkbox' => 'Onay Kutusu',
+        'radio' => 'Radyo Butonları',
+    ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

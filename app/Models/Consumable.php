@@ -4,21 +4,17 @@ namespace App\Models;
 
 use App\Helpers\Helper;
 use App\Models\Traits\Acceptable;
+use App\Models\Traits\CompanyableTrait;
+use App\Models\Traits\HasUploads;
+use App\Models\Traits\Loggable;
 use App\Models\Traits\Searchable;
+use App\Presenters\ConsumablePresenter;
 use App\Presenters\Presentable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Watson\Validating\ValidatingTrait;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use App\Presenters\ConsumablePresenter;
-use App\Models\Actionlog;
-use App\Models\ConsumableAssignment;
-use App\Models\User;
-use App\Models\Location;
-use App\Models\Manufacturer;
-use App\Models\Supplier;
-use App\Models\Category;
 
 class Consumable extends SnipeModel
 {
@@ -29,6 +25,7 @@ class Consumable extends SnipeModel
     use Loggable, Presentable;
     use SoftDeletes;
     use Acceptable;
+    use HasUploads;
 
     protected $table = 'consumables';
     protected $casts = [
@@ -49,8 +46,9 @@ class Consumable extends SnipeModel
         'qty'         => 'required|integer|min:0|max:99999',
         'category_id' => 'required|integer',
         'company_id'  => 'integer|nullable',
+        'location_id' => 'exists:locations,id|nullable|fmcs_location',
         'min_amt'     => 'integer|min:0|max:99999|nullable',
-        'purchase_cost'   => 'numeric|nullable|gte:0|max:9999999999999',
+        'purchase_cost'     =>  'numeric|nullable|gte:0|max:99999999999999999.99',
         'purchase_date'   => 'date_format:Y-m-d|nullable',
     ];
 
@@ -75,6 +73,7 @@ class Consumable extends SnipeModel
         'item_no',
         'location_id',
         'manufacturer_id',
+        'supplier_id',
         'name',
         'order_number',
         'model_number',
@@ -109,21 +108,6 @@ class Consumable extends SnipeModel
     ];
 
 
-    /**
-     * Establishes the components -> action logs -> uploads relationship
-     *
-     * @author A. Gianotto <snipe@snipe.net>
-     * @since [v6.1.13]
-     * @return \Illuminate\Database\Eloquent\Relations\Relation
-     */
-    public function uploads()
-    {
-        return $this->hasMany(Actionlog::class, 'item_id')
-            ->where('item_type', '=', self::class)
-            ->where('action_type', '=', 'uploaded')
-            ->whereNotNull('filename')
-            ->orderBy('created_at', 'desc');
-    }
 
 
     /**
@@ -136,7 +120,7 @@ class Consumable extends SnipeModel
      * @todo Update this comment once it's been implemented
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function setRequestableAttribute($value)
@@ -151,7 +135,7 @@ class Consumable extends SnipeModel
      * Establishes the consumable -> admin user relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function adminuser()
@@ -163,7 +147,7 @@ class Consumable extends SnipeModel
      * Establishes the component -> assignments relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function consumableAssignments()
@@ -175,7 +159,7 @@ class Consumable extends SnipeModel
      * Establishes the component -> company relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function company()
@@ -187,7 +171,7 @@ class Consumable extends SnipeModel
      * Establishes the component -> manufacturer relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function manufacturer()
@@ -199,7 +183,7 @@ class Consumable extends SnipeModel
      * Establishes the component -> location relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function location()
@@ -211,7 +195,7 @@ class Consumable extends SnipeModel
      * Establishes the component -> category relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function category()
@@ -224,7 +208,7 @@ class Consumable extends SnipeModel
      * Establishes the component -> action logs relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function assetlog()
@@ -236,23 +220,28 @@ class Consumable extends SnipeModel
      * Gets the full image url for the consumable
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      * @return string | false
      */
     public function getImageUrl()
     {
+        // If there is a consumable image, use that
         if ($this->image) {
             return Storage::disk('public')->url(app('consumables_upload_path').$this->image);
-        }
-        return false;
 
+        // Otherwise check for a category image
+        }   elseif (($this->category) && ($this->category->image)) {
+            return Storage::disk('public')->url(app('categories_upload_path').e($this->category->image));
+        }
+
+        return false;
     }
 
     /**
      * Establishes the component -> users relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v3.0]
+     * @since  [v3.0]
      */
     public function users() : Relation
     {
@@ -263,7 +252,7 @@ class Consumable extends SnipeModel
      * Establishes the item -> supplier relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v6.1.1]
+     * @since  [v6.1.1]
      * @return \Illuminate\Database\Eloquent\Relations\Relation
      */
     public function supplier()
@@ -277,19 +266,19 @@ class Consumable extends SnipeModel
      * asset model category
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v4.0]
+     * @since  [v4.0]
      * @return bool
      */
     public function checkin_email()
     {
-        return $this->category->checkin_email;
+        return $this->category?->checkin_email;
     }
 
     /**
      * Determine whether this asset requires acceptance by the assigned user
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v4.0]
+     * @since  [v4.0]
      * @return bool
      */
     public function requireAcceptance()
@@ -298,29 +287,10 @@ class Consumable extends SnipeModel
     }
 
     /**
-     * Checks for a category-specific EULA, and if that doesn't exist,
-     * checks for a settings level EULA
-     *
-     * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v4.0]
-     * @return string | false
-     */
-    public function getEula()
-    {
-        if ($this->category->eula_text) {
-            return  Helper::parseEscapedMarkedown($this->category->eula_text);
-        } elseif ((Setting::getSettings()->default_eula_text) && ($this->category->use_default_eula == '1')) {
-            return  Helper::parseEscapedMarkedown(Setting::getSettings()->default_eula_text);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Check how many items within a consumable are checked out
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v5.0]
+     * @since  [v5.0]
      * @return int
      */
     public function numCheckedOut()
@@ -332,7 +302,7 @@ class Consumable extends SnipeModel
      * Checks the number of available consumables
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v4.0]
+     * @since  [v4.0]
      * @return int
      */
     public function numRemaining()
@@ -342,6 +312,23 @@ class Consumable extends SnipeModel
         $remaining = $total - $checkedout;
 
         return $remaining;
+    }
+    public function totalCostSum() {
+
+        return $this->purchase_cost !== null ? $this->qty * $this->purchase_cost : null;
+    }
+    /**
+     * Get the list of checkouts for this consumable
+     *
+     * @author [A. Gianotto] [<snipe@snipe.net>]
+     * @since  [v2.0]
+     * @return \Illuminate\Database\Eloquent\Relations\Relation
+     */
+    public function checkouts()
+    {
+        return $this->assetlog()->where('action_type', '=', 'checkout')
+            ->orderBy('created_at', 'desc')
+            ->withTrashed();
     }
 
     /**
@@ -358,8 +345,8 @@ class Consumable extends SnipeModel
      * This simply checks that there is a value for quantity, and if there isn't, set it to 0.
      *
      * @author A. Gianotto <snipe@snipe.net>
-     * @since v6.3.4
-     * @param $value
+     * @since  v6.3.4
+     * @param  $value
      * @return void
      */
     public function setQtyAttribute($value)
@@ -374,10 +361,103 @@ class Consumable extends SnipeModel
      **/
 
     /**
+     * Query builder scope to search on text filters for complex Bootstrap Tables API
+     *
+     * @param \Illuminate\Database\Query\Builder $query  Query builder instance
+     * @param text                               $filter JSON array of search keys and terms
+     *
+     * @return \Illuminate\Database\Query\Builder          Modified query builder
+     */
+    public function scopeByFilter($query, $filter)
+    {
+        return $query->where(
+            function ($query) use ($filter) {
+                foreach ($filter as $fieldname => $search_val) {
+
+                    if ($fieldname == 'name') {
+                        $query->where('consumables.name', 'LIKE', '%' . $search_val . '%');
+                    }
+
+                    if ($fieldname == 'notes') {
+                        $query->where('consumables.notes', 'LIKE', '%' . $search_val . '%');
+                    }
+
+                    if ($fieldname == 'model_number') {
+                        $query->where('consumables.model_number', 'LIKE', '%' . $search_val . '%');
+                    }
+
+                    if ($fieldname == 'order_number') {
+                        $query->where('consumables.order_number', 'LIKE', '%' . $search_val . '%');
+                    }
+
+                    if ($fieldname == 'item_no') {
+                        $query->where('consumables.item_no', 'LIKE', '%' . $search_val . '%');
+                    }
+
+                    if ($fieldname == 'serial') {
+                        $query->where('consumables.serial', 'LIKE', '%' . $search_val . '%');
+                    }
+
+                    if ($fieldname == 'purchase_cost') {
+                        $query->where('consumables.purchase_cost', 'LIKE', '%' . $search_val . '%');
+                    }
+
+                    if ($fieldname == 'location') {
+                        $query->whereHas(
+                            'location', function ($query) use ($search_val) {
+                            $query->where('locations.name', 'LIKE', '%'.$search_val.'%');
+                        }
+                        );
+                    }
+
+                    if ($fieldname == 'manufacturer') {
+                        $query->whereHas(
+                            'manufacturer', function ($query) use ($search_val) {
+                            $query->where('manufacturers.name', 'LIKE', '%'.$search_val.'%');
+                        }
+                        );
+                    }
+
+
+                    if ($fieldname == 'supplier') {
+                        $query->whereHas(
+                            'supplier', function ($query) use ($search_val) {
+                            $query->where('suppliers.name', 'LIKE', '%'.$search_val.'%');
+                        }
+                        );
+                    }
+
+
+                    if ($fieldname == 'category') {
+                        $query->whereHas(
+                            'category', function ($query) use ($search_val) {
+                            $query->where('categories.name', 'LIKE', '%'.$search_val.'%');
+                        }
+                        );
+                    }
+
+                    if ($fieldname == 'company') {
+                        $query->whereHas(
+                            'company', function ($query) use ($search_val) {
+                            $query->where('companies.name', 'LIKE', '%'.$search_val.'%');
+                        }
+                        );
+                    }
+
+
+
+                }
+
+
+            }
+        );
+    }
+
+    /**
      * Query builder scope to order on company
      *
-     * @param  \Illuminate\Database\Query\Builder  $query  Query builder instance
-     * @param  string                              $order       Order
+     * @param \Illuminate\Database\Query\Builder $query Query builder instance
+     * @param string                             $order Order
      *
      * @return \Illuminate\Database\Query\Builder          Modified query builder
      */
@@ -389,8 +469,8 @@ class Consumable extends SnipeModel
     /**
      * Query builder scope to order on location
      *
-     * @param  \Illuminate\Database\Query\Builder  $query  Query builder instance
-     * @param  text                              $order       Order
+     * @param \Illuminate\Database\Query\Builder $query Query builder instance
+     * @param text                               $order Order
      *
      * @return \Illuminate\Database\Query\Builder          Modified query builder
      */
@@ -402,8 +482,8 @@ class Consumable extends SnipeModel
     /**
      * Query builder scope to order on manufacturer
      *
-     * @param  \Illuminate\Database\Query\Builder  $query  Query builder instance
-     * @param  string   $order       Order
+     * @param \Illuminate\Database\Query\Builder $query Query builder instance
+     * @param string                             $order Order
      *
      * @return \Illuminate\Database\Query\Builder          Modified query builder
      */
@@ -415,8 +495,8 @@ class Consumable extends SnipeModel
     /**
      * Query builder scope to order on company
      *
-     * @param  \Illuminate\Database\Query\Builder  $query  Query builder instance
-     * @param  string                              $order       Order
+     * @param \Illuminate\Database\Query\Builder $query Query builder instance
+     * @param string                             $order Order
      *
      * @return \Illuminate\Database\Query\Builder          Modified query builder
      */
@@ -428,8 +508,8 @@ class Consumable extends SnipeModel
     /**
      * Query builder scope to order on remaining
      *
-     * @param  \Illuminate\Database\Query\Builder  $query  Query builder instance
-     * @param  string                              $order       Order
+     * @param \Illuminate\Database\Query\Builder $query Query builder instance
+     * @param string                             $order Order
      *
      * @return \Illuminate\Database\Query\Builder          Modified query builder
      */
@@ -442,8 +522,8 @@ class Consumable extends SnipeModel
     /**
      * Query builder scope to order on supplier
      *
-     * @param  \Illuminate\Database\Query\Builder  $query  Query builder instance
-     * @param  text                              $order       Order
+     * @param \Illuminate\Database\Query\Builder $query Query builder instance
+     * @param text                               $order Order
      *
      * @return \Illuminate\Database\Query\Builder          Modified query builder
      */

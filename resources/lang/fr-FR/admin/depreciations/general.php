@@ -2,7 +2,7 @@
 
 return [
     'about_asset_depreciations'  			=> 'A propos des Amortissements',
-    'about_depreciations'  					=> 'Vous pouvez configurer les amortissements de vos biens basés sur l\'amortissement linéaire.',
+    'about_depreciations'  					=> 'You can set up asset depreciations to depreciate assets based on linear (straight-line), Half Year applied with condition, or Half Year always applied.',
     'asset_depreciations'  					=> 'Amortissements',
     'create'  					            => 'Créer un amortissement',
     'depreciation_name'  					=> 'Nom d\'Amortissement',
@@ -13,4 +13,8 @@ return [
     'no_depreciations_warning'               => '<strong>Avertissement : </strong>
                       Vous n\'avez actuellement aucun amortissement.
                       Veuillez mettre en place au moins un amortissement pour consulter le rapport d\'amortissement.',
+    'depreciation_method'                   => 'Rapport d’amortissement',
+    'linear_depreciation'                   => 'Linear (Default)',
+    'half_1'                                => 'Half-year convention, always applied',
+    'half_2'                                => 'Half-year convention, applied with condition',
 ];

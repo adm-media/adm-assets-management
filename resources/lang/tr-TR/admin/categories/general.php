@@ -3,13 +3,15 @@
 return array(
     'asset_categories' 					=> 'Demirbaş Kategorileri',
     'category_name'  					=> 'Kategori Adı',
-    'checkin_email'                     => 'Kullanıcıyı e-posta ile bilgilendir (iade etme / kullanıma alma).',
+    'email_to_user_upon_checkin' => 'Send email to user upon checkin.',
+    'email_to_user_upon_checkin_and_checkout' => 'Send email to user upon checkin/checkout.',
+    'email_to_initiator'                => 'Kullanıcı teslimatı kabul ettiğinde veya reddettiğinde e-posta alın.',
     'checkin_email_notification'        => 'Bu Kullanıcı iade etme/kullanıma alma üzerinde bir e-posta gönderilecektir.',
     'clone'                             => 'Kategoriyi Kopyala',
     'create'  							=> 'Kategori Oluştur',
     'edit'                              => 'Kategoriyi Düzenle',
-    'email_will_be_sent_due_to_global_eula' => 'Global EULA kullanıldığı için kullanıcıya bir e-posta gönderilecektir.',
-    'email_will_be_sent_due_to_category_eula' => 'Bu kategori için bir EULA ayarlandığından kullanıcıya bir e-posta gönderilecektir.',
+    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user upon checkout because the global EULA is being used.',
+    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user upon checkout because a EULA is set for this category.',
     'eula_text'							=> 'Kategori Sözleşmeleri',
     'eula_text_help'					=> 'Bu alan özel tipteki demirbaşlarınız için Sözleşmesi\'ni özelleştirmeniz içindir. Eğer tüm demirbaşlarınız için sadece tek sözleşmeniz var ise yukarıdaki kutucuğu işaretlereyerek varsayılan yapabilirsiniz.',
     'name'                              => 'Kategori Adı',
@@ -21,5 +23,9 @@ return array(
     'use_default_eula'					=> '<a href="#" data-toggle="modal" data-target="#eulaModal">\'yı Varsayılan Sözleşme</a> yerine kullan.',
     'use_default_eula_disabled'			=> '<del>Varsayılan sözleşmeyi kullan</del> Varsayılan sözleşme tanımlı değil. Lütfen Ayarlar\'dan ekleyiniz.',
     'use_default_eula_column'			=> 'Varsayılan sözleşmeyi kullan',
+    'import_require_acceptance'         => 'Onay Gerektirir',
+    'import_checkin_email'              => 'Kontrol E-postası Gönder',
+    'import_eula_text'                  => 'Son Kullanıcı Lisans Sözleşmesi',
+    'import_category_type'              => 'Kategori Türü',
 
 );

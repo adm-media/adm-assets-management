@@ -3,13 +3,15 @@
 return array(
     'asset_categories' 					=> 'Vahendite kategooriad',
     'category_name'  					=> 'Kategooria nimi',
-    'checkin_email'                     => 'Saada kasutajale e-kiri vara liikumise kohta.',
+    'email_to_user_upon_checkin' => 'Send email to user upon checkin.',
+    'email_to_user_upon_checkin_and_checkout' => 'Send email to user upon checkin/checkout.',
+    'email_to_initiator'                => 'Send email to you when user accepts or declines checkout.',
     'checkin_email_notification'        => 'Kasutajale saadetakse e-kiri vara liikumise kohta.',
     'clone'                             => 'Klooni kategooria',
     'create'  							=> 'Uus kategooria',
     'edit'                              => 'Muuda kategooriat',
-    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user because the global EULA is being used.',
-    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user because a EULA is set for this category.',
+    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user upon checkout because the global EULA is being used.',
+    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user upon checkout because a EULA is set for this category.',
     'eula_text'							=> 'Kategooria EULA',
     'eula_text_help'					=> 'Selle välja abil saad oma EULA-t kohendada konkreetsele vahendi tüübile sobivaks. Kui sul on ainult üks EULA kõigile vahenditele, võid märkida valiku siin all, et kasutada peamist vaikimisi versiooni.',
     'name'                              => 'Kategooria nimi',
@@ -21,5 +23,9 @@ return array(
     'use_default_eula'					=> 'Kasuta hoopis <a href="#" data-toggle="modal" data-target="#eulaModal">peamist vaikimisi EULA-t</a>.',
     'use_default_eula_disabled'			=> '<del>Kasuta hoopis peamist vaikimisi EULAt.</del> Peamine vaikumisi EULA puudub. Lisa see seadete alt.',
     'use_default_eula_column'			=> 'Kasuta vaikimisi EULA',
+    'import_require_acceptance'         => 'Require Acceptance',
+    'import_checkin_email'              => 'Send Checkin Email',
+    'import_eula_text'                  => 'EULA text',
+    'import_category_type'              => 'Category Type',
 
 );

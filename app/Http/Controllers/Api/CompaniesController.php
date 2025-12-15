@@ -38,12 +38,16 @@ class CompaniesController extends Controller
             'accessories_count',
             'consumables_count',
             'components_count',
+            'tag_color',
             'notes',
         ];
 
         $companies = Company::withCount(['assets as assets_count'  => function ($query) {
             $query->AssetsForShow();
-        }])->withCount('licenses as licenses_count', 'accessories as accessories_count', 'consumables as consumables_count', 'components as components_count', 'users as users_count');
+        }])
+            ->with('adminuser')
+            ->withCount('licenses as licenses_count', 'accessories as accessories_count', 'consumables as consumables_count', 'components as components_count', 'users as users_count');
+
 
         if ($request->filled('search')) {
             $companies->TextSearch($request->input('search'));
@@ -60,6 +64,11 @@ class CompaniesController extends Controller
         if ($request->filled('created_by')) {
             $companies->where('created_by', '=', $request->input('created_by'));
         }
+
+        if ($request->filled('tag_color')) {
+            $companies->where('tag_color', '=', $request->input('tag_color'));
+        }
+
 
 
         // Make sure the offset and limit are actually integers and do not exceed system limits
@@ -119,6 +128,7 @@ class CompaniesController extends Controller
     {
         $this->authorize('view', Company::class);
         $company = Company::findOrFail($id);
+        $this->authorize('view', $company);
         return (new CompaniesTransformer)->transformCompany($company);
 
     }
@@ -136,6 +146,7 @@ class CompaniesController extends Controller
     {
         $this->authorize('update', Company::class);
         $company = Company::findOrFail($id);
+        $this->authorize('update', $company);
         $company->fill($request->all());
         $company = $request->handleImages($company);
 
@@ -186,7 +197,9 @@ class CompaniesController extends Controller
             'companies.name',
             'companies.email',
             'companies.image',
+            'companies.tag_color',
         ]);
+
 
         if ($request->filled('search')) {
             $companies = $companies->where('companies.name', 'LIKE', '%'.$request->get('search').'%');

@@ -12,7 +12,8 @@ return [
     'create'                    => 'Tạo địa phương',
     'update'                    => 'Cập nhật địa phương',
     'print_assigned'            => 'In tài sản đã cấp phát',
-    'print_all_assigned'        => 'In tất cả tài sản đã cấp phát',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Tên địa phương',
     'address'                   => 'Địa chỉ',
     'address2'                   => 'Địa chỉ thứ 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Được ký bởi (Quản lý tài chính):',
     'signed_by_location_manager' => 'Được ký bởi (Quản lý khu vực):',
     'signed_by'                 => 'Được ký bởi:',
+    'clone'  					=> 'Clone Location',
 ];

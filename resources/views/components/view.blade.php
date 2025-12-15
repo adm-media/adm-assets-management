@@ -67,6 +67,16 @@
           </a>
         </li>
 
+        <li>
+          <a href="#history" data-toggle="tab">
+                <span class="hidden-lg hidden-md">
+                  <i class="fas fa-history fa-2x" aria-hidden="true"></i>
+                </span>
+            <span class="hidden-xs hidden-sm">
+                  {{ trans('general.history') }}
+                </span>
+          </a>
+        </li>
 
         @can('components.files', $component)
           <li>
@@ -74,7 +84,7 @@
             <span class="hidden-lg hidden-md">
             <i class="far fa-file fa-2x" aria-hidden="true"></i></span>
               <span class="hidden-xs hidden-sm">{{ trans('general.file_uploads') }}
-                {!! ($component->uploads->count() > 0 ) ? '<badge class="badge badge-secondary">'.number_format($component->uploads->count()).'</badge>' : '' !!}
+                {!! ($component->uploads->count() > 0 ) ? '<span class="badge badge-secondary">'.number_format($component->uploads->count()).'</span>' : '' !!}
             </span>
             </a>
           </li>
@@ -92,18 +102,13 @@
       <div class="tab-content">
 
         <div class="tab-pane active" id="checkedout">
-          <div class="table table-responsive">
+
 
             <table
                     data-cookie-id-table="componentsCheckedoutTable"
-                    data-pagination="true"
                     data-id-table="componentsCheckedoutTable"
-                    data-search="true"
                     data-side-pagination="server"
-                    data-show-columns="true"
-                    data-show-export="true"
                     data-show-footer="true"
-                    data-show-refresh="true"
                     data-sort-order="asc"
                     data-sort-name="name"
                     id="componentsCheckedoutTable"
@@ -134,19 +139,33 @@
               </thead>
             </table>
 
-          </div>
         </div> <!-- close tab-pane div -->
+
+        <div class="tab-pane" id="history">
+            <table
+                    data-columns="{{ \App\Presenters\HistoryPresenter::dataTableLayout() }}"
+                    class="table table-striped snipe-table"
+                    id="componentHistory"
+                    data-id-table="componentHistory"
+                    data-side-pagination="server"
+                    data-sort-order="desc"
+                    data-sort-name="created_at"
+                    data-export-options='{
+                         "fileName": "export-component-{{  $component->id }}-history",
+                         "ignoreColumn": ["actions","image","change","checkbox","checkincheckout","icon"]
+                       }'
+                    data-url="{{ route('api.activity.index', ['item_id' => $component->id, 'item_type' => 'component']) }}"
+                    data-cookie-id-table="componentHistory"
+                    data-cookie="true">
+            </table>
+        </div><!-- /.tab-pane -->
 
 
         @can('components.files', $component)
           <div class="tab-pane" id="files">
             <div class="row">
               <div class="col-md-12">
-                <x-filestable
-                        filepath="private_uploads/components/"
-                        showfile_routename="show.componentfile"
-                        deletefile_routename="delete/componentfile"
-                        :object="$component" />
+                <x-filestable object_type="components" :object="$component" />
               </div>
             </div>
           </div> <!-- /.tab-pane -->
@@ -167,6 +186,28 @@
 
     @endif
 
+        @if ($component->company)
+            <div class="col-md-12" style="padding-bottom: 5px;">
+                <strong>{{ trans('general.company') }}: </strong>
+                {!!  $component->company->present()->formattedNameLink !!}
+            </div>
+        @endif
+
+        @if ($component->category)
+            <div class="col-md-12" style="padding-bottom: 5px;">
+                <strong>{{ trans('general.category') }}: </strong>
+                {!!  $component->category->present()->formattedNameLink !!}
+            </div>
+        @endif
+
+        @if ($component->location)
+            <div class="col-md-12" style="padding-bottom: 5px;">
+                <strong>{{ trans('general.location') }}: </strong>
+                {!!  $component->location->present()->formattedNameLink !!}
+            </div>
+        @endif
+
+
     @if ($component->serial!='')
     <div class="col-md-12" style="padding-bottom: 5px;"><strong>{{ trans('admin/hardware/form.serial') }}: </strong>
     {{ $component->serial }} </div>
@@ -178,10 +219,17 @@
     @endif
 
     @if ($component->purchase_cost)
-    <div class="col-md-12" style="padding-bottom: 5px;"><strong>{{ trans('admin/components/general.cost') }}:</strong>
+    <div class="col-md-12" style="padding-bottom: 5px;"><strong>{{ trans('general.unit_cost') }}:</strong>
     {{ $snipeSettings->default_currency }}
 
     {{ Helper::formatCurrencyOutput($component->purchase_cost) }} </div>
+    @endif
+
+    @if ($component->purchase_cost)
+        <div class="col-md-12" style="padding-bottom: 5px;"><strong>{{ trans('general.total_cost') }}:</strong>
+            {{ $snipeSettings->default_currency }}
+
+            {{ Helper::formatCurrencyOutput($component->totalCostSum()) }} </div>
     @endif
 
     @if ($component->order_number)
@@ -218,6 +266,21 @@
               {{ trans('admin/components/general.checkout') }}
             </a>
     </div>
+  @endcan
+
+  @can('delete', $component)
+        <div class="col-md-12 hidden-print" style="padding-top: 5px;">
+          @if ($component->isDeletable())
+              <button class="btn btn-sm btn-block btn-danger btn-social delete-asset" data-icon="fa fa-trash" data-toggle="modal" data-title="{{ trans('general.delete') }}" data-content="{{ trans('general.sure_to_delete_var', ['item' => $component->name]) }}" data-target="#dataConfirmModal" onClick="return false;">
+              <x-icon type="delete" />
+              {{ trans('general.delete') }}
+            </button>
+          @else
+            <a href="#" class="btn btn-block btn-sm btn-danger btn-social hidden-print disabled" data-tooltip="true"  data-placement="top" data-title="{{ trans('general.cannot_be_deleted') }}" onClick="return false;">
+              <x-icon type="delete" />
+              {{ trans('general.delete') }}
+            </a>
+          @endif
   @endcan
 
 

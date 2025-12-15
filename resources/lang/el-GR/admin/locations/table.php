@@ -12,7 +12,8 @@ return [
     'create'                    => 'Δημιουργία τοποθεσίας',
     'update'                    => 'Ανανέωση τοποθεσίας',
     'print_assigned'            => 'Εκτύπωση Που Ανατέθηκε',
-    'print_all_assigned'        => 'Εκτύπωση Όλων Των Ανατεθέντων',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Όνομα τοποθεσίας',
     'address'                   => 'Διεύθυνση',
     'address2'                   => 'Γραμμή Διεύθυνσης 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Υπογράφηκε Από (Ελεγκτή Χρηματοδότησης):',
     'signed_by_location_manager' => 'Υπογράφηκε Από (Location Manager):',
     'signed_by'                 => 'Υπεγράφη Από:',
+    'clone'  					=> 'Clone Location',
 ];

@@ -12,7 +12,8 @@ return [
     'create'                    => 'இருப்பிடத்தை உருவாக்கவும்',
     'update'                    => 'இருப்பிடம் புதுப்பிக்கவும்',
     'print_assigned'            => 'ஒப்படைக்கப்பட்டதை அச்சிடு',
-    'print_all_assigned'        => 'ஒப்படைக்கப்பட்ட அனைத்தையும் அச்சிடு',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'இருப்பிடம் பெயர்',
     'address'                   => 'முகவரி',
     'address2'                   => 'Address Line 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Signed By (Finance Auditor):',
     'signed_by_location_manager' => 'Signed By (Location Manager):',
     'signed_by'                 => 'Signed Off By:',
+    'clone'  					=> 'Clone Location',
 ];

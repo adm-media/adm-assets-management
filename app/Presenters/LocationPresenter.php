@@ -18,6 +18,8 @@ class LocationPresenter extends Presenter
                 'field' => 'bulk_selectable',
                 'checkbox' => true,
                 'formatter' => 'checkboxEnabledFormatter',
+                'titleTooltip' => trans('general.select_all_none'),
+                'printIgnore' => true,
             ], [
                 'field' => 'id',
                 'searchable' => false,
@@ -25,7 +27,17 @@ class LocationPresenter extends Presenter
                 'switchable' => true,
                 'title' => trans('general.id'),
                 'visible' => false,
-            ], [
+            ],
+            [
+                'field' => 'company',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.company'),
+                'visible' => false,
+                'formatter' => 'companiesLinkObjFormatter'
+            ],
+            [
                 'field' => 'name',
                 'searchable' => true,
                 'sortable' => true,
@@ -50,12 +62,23 @@ class LocationPresenter extends Presenter
                 'visible' => true,
                 'formatter' => 'locationsLinkObjFormatter',
             ], [
+                'field' => 'users_count',
+                'searchable' => false,
+                'sortable' => true,
+                'switchable' => true,
+                'title' =>  trans('general.people'),
+                'titleTooltip' =>  trans('general.people'),
+                'visible' => true,
+                'class' => 'css-house-user',
+            ], [
                 'field' => 'assets_count',
                 'searchable' => false,
                 'sortable' => true,
                 'switchable' => true,
                 'title' =>  trans('admin/locations/message.current_location'),
+                'titleTooltip' => trans('admin/locations/message.current_location'),
                 'visible' => true,
+                'class' => 'css-house-laptop',
             ], [
                 'field' => 'rtd_assets_count',
                 'searchable' => false,
@@ -84,7 +107,7 @@ class LocationPresenter extends Presenter
                 'titleTooltip' =>  trans('general.accessories'),
                 'visible' => true,
                 'class' => 'css-accessory',
-            ], [
+            ],[
                 'field' => 'assigned_accessories_count',
                 'searchable' => false,
                 'sortable' => true,
@@ -94,14 +117,34 @@ class LocationPresenter extends Presenter
                 'visible' => true,
                 'class' => 'css-accessory-alt',
             ], [
-                'field' => 'users_count',
+                'field' => 'components_count',
                 'searchable' => false,
                 'sortable' => true,
                 'switchable' => true,
-                'title' =>  trans('general.people'),
-                'titleTooltip' =>  trans('general.people'),
+                'title' =>  trans('general.components'),
+                'titleTooltip' =>  trans('general.components'),
                 'visible' => true,
-                'class' => 'css-house-user',
+                'class' => 'css-component',
+            ],
+            [
+                'field' => 'consumables_count',
+                'searchable' => false,
+                'sortable' => true,
+                'switchable' => true,
+                'title' =>  trans('general.consumables'),
+                'titleTooltip' =>  trans('general.consumables'),
+                'visible' => true,
+                'class' => 'css-consumable',
+            ],
+            [
+                'field' => 'children_count',
+                'searchable' => false,
+                'sortable' => true,
+                'switchable' => true,
+                'title' =>  trans('general.child_locations'),
+                'titleTooltip' =>  trans('general.child_locations'),
+                'visible' => true,
+                'class' => 'css-child-locations',
             ], [
                 'field' => 'currency',
                 'searchable' => true,
@@ -184,7 +227,15 @@ class LocationPresenter extends Presenter
                 'title' =>  trans('admin/users/table.manager'),
                 'visible' => false,
                 'formatter' => 'usersLinkObjFormatter',
-            ],  [
+            ], [
+                'field' => 'tag_color',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.tag_color'),
+                'visible' => false,
+                'formatter' => 'colorTagFormatter',
+            ], [
                 'field' => 'notes',
                 'searchable' => true,
                 'sortable' => true,
@@ -198,7 +249,16 @@ class LocationPresenter extends Presenter
                 'title' => trans('general.created_at'),
                 'visible' => false,
                 'formatter' => 'dateDisplayFormatter',
-            ], [
+            ],
+            [
+                'field' => 'created_by',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.created_by'),
+                'visible' => false,
+                'formatter' => 'usersLinkObjFormatter',
+            ],[
                 'field' => 'actions',
                 'searchable' => false,
                 'sortable' => false,
@@ -262,7 +322,7 @@ class LocationPresenter extends Presenter
                 'field' => 'created_by',
                 'searchable' => false,
                 'sortable' => false,
-                'title' => trans('general.admin'),
+                'title' => trans('general.created_by'),
                 'visible' => false,
                 'formatter' => 'usersLinkObjFormatter',
             ],
@@ -314,5 +374,14 @@ class LocationPresenter extends Presenter
     public function fullName()
     {
         return $this->name;
+    }
+
+    public function formattedNameLink() {
+
+        if (auth()->user()->can('view', ['\App\Models\Location', $this])) {
+            return ($this->tag_color ? "<i class='fa-solid fa-fw fa-square' style='color: ".e($this->tag_color)."' aria-hidden='true'></i>" : '').'<a href="'.route('locations.show', e($this->id)).'">'.e($this->name).'</a>';
+        }
+
+        return ($this->tag_color ? "<i class='fa-solid fa-fw fa-square' style='color: ".e($this->tag_color)."' aria-hidden='true'></i> " : '').$this->name;
     }
 }

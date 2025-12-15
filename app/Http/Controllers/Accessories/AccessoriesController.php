@@ -77,13 +77,30 @@ class AccessoriesController extends Controller
         $accessory->supplier_id             = request('supplier_id');
         $accessory->notes                   = request('notes');
 
-        $accessory = $request->handleImages($accessory);
+        if ($request->has('use_cloned_image')) {
+            $cloned_model_img = Accessory::select('image')->find($request->input('clone_image_from_id'));
+            if ($cloned_model_img) {
+                $new_image_name = 'clone-'.date('U').'-'.$cloned_model_img->image;
+                $new_image = 'accessories/'.$new_image_name;
+                Storage::disk('public')->copy('accessories/'.$cloned_model_img->image, $new_image);
+                $accessory->image = $new_image_name;
+            }
 
-        session()->put(['redirect_option' => $request->get('redirect_option')]);
+        } else {
+            $accessory = $request->handleImages($accessory);
+        }
+
+        if($request->get('redirect_option') === 'back'){
+            session()->put(['redirect_option' => 'index']);
+        } else {
+            session()->put(['redirect_option' => $request->get('redirect_option')]);
+        }
+
         // Was the accessory created?
         if ($accessory->save()) {
             // Redirect to the new accessory  page
-            return redirect()->to(Helper::getRedirectOption($request, $accessory->id, 'Accessories'))->with('success', trans('admin/accessories/message.create.success'));
+            return Helper::getRedirectOption($request, $accessory->id, 'Accessories')
+                ->with('success', trans('admin/accessories/message.create.success'));
         }
 
         return redirect()->back()->withInput()->withErrors($accessory->getErrors());
@@ -112,13 +129,14 @@ class AccessoriesController extends Controller
     {
 
         $this->authorize('create', Accessory::class);
-
-        $accessory = clone $accessory;
-        $accessory->id = null;
-        $accessory->location_id = null;
+        $cloned = clone $accessory;
+        $accessory_to_clone = $accessory;
+        $cloned->id = null;
+        $cloned->deleted_at = '';
 
         return view('accessories/edit')
-            ->with('item', $accessory);
+            ->with('cloned_model', $accessory_to_clone)
+            ->with('item', $cloned);
         
     }
 
@@ -164,10 +182,15 @@ class AccessoriesController extends Controller
 
             $accessory = $request->handleImages($accessory);
 
-            session()->put(['redirect_option' => $request->get('redirect_option')]);
+            if($request->get('redirect_option') === 'back'){
+                session()->put(['redirect_option' => 'index']);
+            } else {
+                session()->put(['redirect_option' => $request->get('redirect_option')]);
+            }
 
             if ($accessory->save()) {
-                return redirect()->to(Helper::getRedirectOption($request, $accessory->id, 'Accessories'))->with('success', trans('admin/accessories/message.update.success'));
+                return Helper::getRedirectOption($request, $accessory->id, 'Accessories')
+                    ->with('success', trans('admin/accessories/message.update.success'));
             }
         } else {
             return redirect()->route('accessories.index')->with('error', trans('admin/accessories/message.does_not_exist'));
@@ -184,15 +207,15 @@ class AccessoriesController extends Controller
      */
     public function destroy($accessoryId) : RedirectResponse
     {
-        if (is_null($accessory = Accessory::find($accessoryId))) {
+        if (is_null($accessory = Accessory::withCount('checkouts as checkouts_count')->find($accessoryId))) {
             return redirect()->route('accessories.index')->with('error', trans('admin/accessories/message.not_found'));
         }
 
         $this->authorize($accessory);
 
 
-        if ($accessory->hasUsers() > 0) {
-            return redirect()->route('accessories.index')->with('error', trans('admin/accessories/message.assoc_users', ['count'=> $accessory->hasUsers()]));
+        if ($accessory->checkouts_count > 0) {
+            return redirect()->route('accessories.index')->with('error', trans('admin/accessories/general.delete_disabled'));
         }
 
         if ($accessory->image) {
@@ -220,7 +243,10 @@ class AccessoriesController extends Controller
      */
     public function show(Accessory $accessory) : View | RedirectResponse
     {
-        $accessory = Accessory::withCount('checkouts as checkouts_count')->find($accessory->id);
+        $accessory->loadCount('checkouts as checkouts_count');
+
+        $accessory->load(['adminuser' => fn($query) => $query->withTrashed()]);
+
         $this->authorize('view', $accessory);
         return view('accessories.view', compact('accessory'));
     }

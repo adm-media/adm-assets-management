@@ -38,6 +38,7 @@ class UpdateUserTest extends TestCase
                 'permissions' => '{"a.new.permission":"1"}',
                 'activated' => true,
                 'phone' => '619-555-5555',
+                'mobile' => '619-666-6666',
                 'jobtitle' => 'Host',
                 'manager_id' => $manager->id,
                 'employee_num' => '1111',
@@ -65,6 +66,7 @@ class UpdateUserTest extends TestCase
         $this->assertArrayHasKey('a.new.permission', $user->decodePermissions(), 'Permissions were not updated');
         $this->assertTrue((bool) $user->activated, 'User not marked as activated');
         $this->assertEquals('619-555-5555', $user->phone, 'Phone was not updated');
+        $this->assertEquals('619-666-6666', $user->mobile, 'Mobile was not updated');
         $this->assertEquals('Host', $user->jobtitle, 'Job title was not updated');
         $this->assertTrue($user->manager->is($manager), 'Manager was not updated');
         $this->assertEquals('1111', $user->employee_num, 'Employee number was not updated');
@@ -112,6 +114,7 @@ class UpdateUserTest extends TestCase
                 'permissions' => '{"a.new.permission":"1"}',
                 'activated' => true,
                 'phone' => '619-555-5555',
+                'mobile' => '619-666-6666',
                 'jobtitle' => 'Host',
                 'manager_id' => $manager->id,
                 'employee_num' => '1111',
@@ -139,6 +142,7 @@ class UpdateUserTest extends TestCase
         $this->assertArrayHasKey('a.new.permission', $user->decodePermissions(), 'Permissions were not updated');
         $this->assertTrue((bool) $user->activated, 'User not marked as activated');
         $this->assertEquals('619-555-5555', $user->phone, 'Phone was not updated');
+        $this->assertEquals('619-666-6666', $user->mobile, 'Mobile was not updated');
         $this->assertEquals('Host', $user->jobtitle, 'Job title was not updated');
         $this->assertTrue($user->manager->is($manager), 'Manager was not updated');
         $this->assertEquals('1111', $user->employee_num, 'Employee number was not updated');
@@ -162,7 +166,7 @@ class UpdateUserTest extends TestCase
 
     public function testApiUsersCanBeActivatedWithNumber()
     {
-        $admin = User::factory()->superuser()->create();
+        $admin = User::factory()->editUsers()->create();
         $user = User::factory()->create(['activated' => 0]);
 
         $this->actingAsForApi($admin)
@@ -175,7 +179,7 @@ class UpdateUserTest extends TestCase
 
     public function testApiUsersCanBeActivatedWithBooleanTrue()
     {
-        $admin = User::factory()->superuser()->create();
+        $admin = User::factory()->editUsers()->create();
         $user = User::factory()->create(['activated' => false]);
 
         $this->actingAsForApi($admin)
@@ -188,7 +192,7 @@ class UpdateUserTest extends TestCase
 
     public function testApiUsersCanBeDeactivatedWithNumber()
     {
-        $admin = User::factory()->superuser()->create();
+        $admin = User::factory()->editUsers()->create();
         $user = User::factory()->create(['activated' => true]);
 
         $this->actingAsForApi($admin)
@@ -201,7 +205,7 @@ class UpdateUserTest extends TestCase
 
     public function testApiUsersCanBeDeactivatedWithBooleanFalse()
     {
-        $admin = User::factory()->superuser()->create();
+        $admin = User::factory()->editUsers()->create();
         $user = User::factory()->create(['activated' => true]);
 
         $this->actingAsForApi($admin)
@@ -210,6 +214,83 @@ class UpdateUserTest extends TestCase
             ]);
 
         $this->assertEquals(0, $user->refresh()->activated);
+    }
+
+    public function testEditingUsersCannotEditEscalationFieldsForAdmins()
+    {
+        $hashed_original = Hash::make('!!094850394680980380kfejlskjfl');
+        $hashed_new = Hash::make('!ABCDEFGIJKL123!!!');
+
+        $editing_user = User::factory()->editUsers()->create();
+        $adminuser = User::factory()->admin()->create(['username' => 'TestAdminUser', 'email'=> 'admin@example.org', 'password' => $hashed_original, 'activated' => 1]);
+
+
+        // The admin being edited
+        $this->assertDatabaseHas('users', [
+            'id' => $adminuser->id,
+            'username' => 'TestAdminUser',
+            'email' => 'admin@example.org',
+            'activated' => 1,
+            'password' => $hashed_original,
+            'permissions' => '{"admin":"1"}',
+        ]);
+
+        $this->actingAsForApi($editing_user)
+            ->patch(route('api.users.update', $adminuser), [
+                'username' => 'testnewusername',
+                'email' => 'testnewemail@example.org',
+                'activated' => 0,
+                'permissions' => "{'superadmin':1}",
+                'password' => $hashed_new,
+            ]);
+
+        // These should keep their old values
+        $this->assertEquals('TestAdminUser', $adminuser->refresh()->username);
+        $this->assertEquals('admin@example.org', $adminuser->refresh()->email);
+        $this->assertEquals(1, $adminuser->refresh()->activated);
+        $this->assertEquals($hashed_original, $adminuser->refresh()->password);
+        $this->assertEquals('{"admin":"1"}', $adminuser->refresh()->permissions);
+
+    }
+
+    public function testAdminsCannotEditEscalationFieldsForSuperadmins()
+    {
+        $hashed_original = Hash::make('my-awesome-password!!!!!12345');
+        $hashed_new = Hash::make('!ABCDEFGIJKL123!!!');
+
+        $editing_user = User::factory()->admin()->create();
+        $superuser = User::factory()->superuser()->create(['username' => 'TestSuperUser', 'email'=> 'superuser@example.org', 'password' => $hashed_original, 'activated' => 1]);
+
+
+        // The admin being edited
+        $this->assertDatabaseHas('users', [
+            'id' => $superuser->id,
+            'username' => 'TestSuperUser',
+            'email' => 'superuser@example.org',
+            'activated' => 1,
+            'password' => $hashed_original,
+            'permissions' => '{"superuser":"1"}',
+        ]);
+
+        $this->actingAsForApi($editing_user)
+            ->patch(route('api.users.update', $superuser), [
+                'username' => 'testnewusername',
+                'email' => 'testnewemail@example.org',
+                'activated' => 0,
+                'permissions' => "{'superadmin':1}",
+                'password' => $hashed_new,
+            ]);
+
+        // These should keep their old values
+        $this->assertEquals('TestSuperUser', $superuser->refresh()->username);
+        $this->assertEquals('superuser@example.org', $superuser->refresh()->email);
+        $this->assertEquals(1, $superuser->refresh()->activated);
+        $this->assertEquals($hashed_original, $superuser->refresh()->password);
+        $this->assertEquals('{"superuser":"1"}', $superuser->refresh()->permissions);
+        $this->assertNotEquals('testnewusername', $superuser->refresh()->username);
+        $this->assertNotEquals('testnewemail@example.org', $superuser->refresh()->email);
+        $this->assertNotTrue(Hash::check('super-secret-new-password', $superuser->password), $superuser->refresh()->password);
+
     }
 
     public function testUsersScopedToCompanyDuringUpdateWhenMultipleFullCompanySupportEnabled()

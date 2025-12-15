@@ -12,7 +12,8 @@ return [
     'create'                    => 'Crea Sede',
     'update'                    => 'Aggiorna Sede',
     'print_assigned'            => 'Stampa assegnazione',
-    'print_all_assigned'        => 'Stampa tutte le assegnazioni',
+    'print_inventory'           => 'Stampa Inventario',
+    'print_all_assigned'        => 'Stampa Inventario e Assegnati',
     'name'                      => 'Nome Sede',
     'address'                   => 'Indirizzo',
     'address2'                   => 'Indirizzo, riga 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Firmato Da (Revisore Finanziario):',
     'signed_by_location_manager' => 'Firmato Da (Responsabile della Sede):',
     'signed_by'                 => 'Firmato Da:',
+    'clone'  					=> 'Clona Sede',
 ];

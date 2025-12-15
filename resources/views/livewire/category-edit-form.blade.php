@@ -64,6 +64,22 @@
         </div>
     </div>
 
+    @if ($requireAcceptance)
+        <div class="form-group">
+            <div class="col-md-9 col-md-offset-3">
+                <label class="form-control">
+                    <input
+                        type="checkbox"
+                        name="alert_on_response"
+                        value="1"
+                        wire:model="alertOnResponse"
+                    />
+                    {{ trans('admin/categories/general.email_to_initiator') }}
+                </label>
+            </div>
+        </div>
+    @endif
+
     <!-- Email on Checkin -->
     <div class="form-group">
         <div class="col-md-9 col-md-offset-3">
@@ -74,18 +90,18 @@
                     value="1"
                     wire:model.live="sendCheckInEmail"
                     aria-label="checkin_email"
-                    @disabled($this->sendCheckInEmailDisabled)
                 />
-                {{ trans('admin/categories/general.checkin_email') }}
+                @if ($this->emailWillBeSendDueToEula)
+                    {{ trans('admin/categories/general.email_to_user_upon_checkin') }}
+                @else
+                    {{ trans('admin/categories/general.email_to_user_upon_checkin_and_checkout') }}
+                @endif
             </label>
-            @if ($this->shouldDisplayEmailMessage)
+            @if ($this->emailWillBeSendDueToEula)
                 <div class="callout callout-info">
                     <i class="far fa-envelope"></i>
                     <span>{{ $this->emailMessage }}</span>
                 </div>
-            @endif
-            @if ($this->sendCheckInEmailDisabled)
-                <input type="hidden" name="checkin_email" wire:model.live="sendCheckInEmail" />
             @endif
         </div>
     </div>

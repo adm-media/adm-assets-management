@@ -7,7 +7,9 @@ use App\Models\Setting;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Symfony\Component\Mime\Email;
 
+#[AllowDynamicProperties]
 class RequestAssetNotification extends Notification
 {
     /**
@@ -78,7 +80,7 @@ class RequestAssetNotification extends Notification
 
         $fields = [
             'QTY' => $qty,
-            'Requested By' => '<'.$target->present()->viewUrl().'|'.$target->present()->fullName().'>',
+            'Requested By' => '<'.$target->present()->viewUrl().'|'.$target->display_name.'>',
         ];
 
         return (new SlackMessage)
@@ -86,7 +88,7 @@ class RequestAssetNotification extends Notification
             ->from($botname)
             ->to($channel)
             ->attachment(function ($attachment) use ($item, $note, $fields) {
-                $attachment->title(htmlspecialchars_decode($item->present()->name), $item->present()->viewUrl())
+                $attachment->title(htmlspecialchars_decode($item->display_name), $item->present()->viewUrl())
                     ->fields($fields)
                     ->content($note);
             });
@@ -118,7 +120,12 @@ class RequestAssetNotification extends Notification
                 'intro_text'        => trans('mail.a_user_requested'),
                 'qty'           => $this->item_quantity,
             ])
-            ->subject(trans('mail.Item_Requested'));
+            ->subject('👀 '.trans('mail.Item_Requested'))
+            ->withSymfonyMessage(function (Email $message) {
+                $message->getHeaders()->addTextHeader(
+                    'X-System-Sender', 'Snipe-IT'
+                );
+            });
 
         return $message;
     }

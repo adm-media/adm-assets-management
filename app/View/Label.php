@@ -25,6 +25,16 @@ class Label implements View
      */
     protected $data;
 
+
+    /**
+     * TCPDF output destination.
+     * "I" - inline by default.
+     * See TCPDF's Output method for details.
+     *
+     * @var string
+     */
+    private string $destination = 'I';
+
     public function __construct() {
         $this->data = new Collection();
     }
@@ -63,6 +73,10 @@ class Label implements View
             $template->getUnit(),
             [0 => $template->getWidth(), 1 => $template->getHeight(), 'Rotate' => $template->getRotation()]
         );
+
+        // Required for CJK languages, otherwise the embedded font can get too massive
+        $pdf->SetFontSubsetting(true);
+
 
         // Reset parameters
         $pdf->SetPrintHeader(false);
@@ -126,18 +140,37 @@ class Label implements View
             if ($template->getSupport2DBarcode()) {
                     $barcode2DType = $settings->label2_2d_type;
                 if (($barcode2DType != 'none') && (!is_null($barcode2DType))) {
+
+                    $label2_2d_prefix = $settings->label2_2d_prefix ? e($settings->label2_2d_prefix) : '';
                         switch ($settings->label2_2d_target) {
                             case 'ht_tag': 
                                 $barcode2DTarget = route('ht/assetTag', $asset->asset_tag); 
                                 break;
                             case 'plain_asset_id': 
-                                $barcode2DTarget = (string) $asset->id; 
+                                $barcode2DTarget = $label2_2d_prefix.(string) $asset->id;
                                 break;
                             case 'plain_asset_tag': 
-                                $barcode2DTarget = $asset->asset_tag; 
+                                $barcode2DTarget = $label2_2d_prefix.$asset->asset_tag;
                                 break;
                             case 'plain_serial_number': 
-                                $barcode2DTarget = $asset->serial; 
+                                $barcode2DTarget = $label2_2d_prefix.$asset->serial;
+                                break;
+                            case 'plain_model_number':
+                                $barcode2DTarget = $label2_2d_prefix.$asset->model->model_number ?? '';
+                                break;
+                            case 'plain_model_name':
+                                $barcode2DTarget = $label2_2d_prefix.$asset->model->display_name ?? '';
+                                break;
+                            case 'plain_manufacturer_name':
+                                $barcode2DTarget = $label2_2d_prefix.$asset->model->display_name;
+                                break;
+                            case 'plain_location_name':
+                                $barcode2DTarget = $label2_2d_prefix.$asset->location->name;
+                                break;
+                            case 'location':
+                                $barcode2DTarget = $asset->location_id
+                                    ? route('locations.show', $asset->location_id)
+                                    : null;
                                 break;
                             case 'hardware_id':
                             default:
@@ -161,14 +194,14 @@ class Label implements View
                             // For fields that have multiple options, we need to combine them
                             // into a single field so all values are displayed.
                             ->reduce(function ($previous, $current) {
-                                // On the first iteration we simply return the item.
+                                // On the first iteration, we simply return the item.
                                 // If there is only one item to be processed for the row
                                 // then this effectively skips everything below this if block.
                                 if (is_null($previous)) {
                                     return $current;
                                 }
 
-                                // At this point we are dealing with a row with multiple items being displayed.
+                                // At this point, we are dealing with a row with multiple items being displayed.
                                 // We need to combine the label and value of the current item with the previous item.
 
                                 // The end result of this will be in this format:
@@ -181,16 +214,34 @@ class Label implements View
                                 // We'll set the label to an empty string since we
                                 // injected the label into the value field above.
                                 $previous['label'] = '';
-
                                 return $previous;
                             });
 
                         return $toAdd ? $myFields->push($toAdd) : $myFields;
                     }, new Collection());
 
-                $assetData->put('fields', $fields->take($template->getSupportFields()));
+                $emptyRowsCount = $settings->label2_empty_row_count;
+                if($emptyRowsCount) {
+                    // Create empty rows
+                    $emptyRows = collect(range(1, $emptyRowsCount))->map(function () {
+                        return [
+                            'label' => '',
+                            'value' => '',
+                            'dataSource' => null,
+                        ];
+                    });
 
-                return $assetData;
+                    // Prepend empty rows to the existing fields
+                    $fieldsWithEmpty = $emptyRows->merge($fields);
+
+                    $assetData->put('fields', $fieldsWithEmpty->take($template->getSupportFields()));
+                    return $assetData;
+                }
+               else{
+                   $assetData->put('fields', $fields->take($template->getSupportFields()));
+                   return $assetData;
+               }
+
             });
         
         if ($template instanceof Sheet) {
@@ -199,7 +250,7 @@ class Label implements View
         $template->writeAll($pdf, $data);
 
         $filename = $assets->count() > 1 ? 'assets.pdf' : $assets->first()->asset_tag.'.pdf';
-        $pdf->Output($filename, 'I');
+        $pdf->Output($filename, $this->destination);
     }
 
     /**

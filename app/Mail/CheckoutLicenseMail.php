@@ -2,18 +2,17 @@
 
 namespace App\Mail;
 
+use App\Models\Asset;
 use App\Models\LicenseSeat;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CheckoutLicenseMail extends Mailable
+class CheckoutLicenseMail extends BaseMailable
 {
     use Queueable, SerializesModels;
 
@@ -25,9 +24,16 @@ class CheckoutLicenseMail extends Mailable
         $this->item = $licenseSeat;
         $this->admin = $checkedOutBy;
         $this->note = $note;
-        $this->target = $checkedOutTo;
         $this->acceptance = $acceptance;
         $this->settings = Setting::getSettings();
+        $this->target = $checkedOutTo;
+
+        if($this->target instanceof User){
+            $this->target = $this->target->display_name;
+        }
+        elseif($this->target instanceof Asset){
+            $this->target = $this->target->display_name;
+        }
     }
 
     /**

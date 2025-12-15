@@ -1,14 +1,14 @@
 <?php
 
 return array(
-    'about'      	=> 'A státusz címkékről',
+    'about'      	=> 'Státusztípusok',
     'archived'      	=> 'Archivált',
     'create'      	=> 'Státusz címke létrehozása',
     'color'      	=> 'Grafikon színe',
     'default_label' => 'Alapértelmezett címke',
     'default_label_help' => 'Ez annak biztosítására szolgál, hogy a leggyakrabban használt állapotcímkék a kiválasztott mező tetején jelenjenek meg az eszközök létrehozásakor / szerkesztésekor.',
     'deployable'      	=> 'Telepíthető',
-    'info'      	=> 'A státusz címkék arra szolgálnak, hogy az eszközök különböző állapotát leírják. Például javítás alatt, eltűnt/ellopott, stb. Új címkéket is létre lehet hozni telepíthető, függőben levő és archivált eszközökhöz.',
+    'info'      	=> 'A státuszcímkék az eszközök állapotát jelzik (pl. javításra kiküldve, elveszett, lopott). Új címkéket hozhat létre a telepíthető, függőben lévő és archivált eszközeihez. További info a <a href="https://snipe-it.readme.io/docs/overview#status-labels" target="_blank">dokumentációban<i class="fa fa-external-link"></i></a>.',
     'name'      	=> 'Státusz elnevezése',
     'pending'      	=> 'Függőben',
     'status_type'   => 'Státusz típusa',

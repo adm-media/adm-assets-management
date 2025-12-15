@@ -44,18 +44,24 @@ class AssetModelsTransformer
             'manufacturer' => ($assetmodel->manufacturer) ? [
                 'id' => (int) $assetmodel->manufacturer->id,
                 'name'=> e($assetmodel->manufacturer->name),
+                'tag_color'=> ($assetmodel->manufacturer->tag_color) ? e($assetmodel->manufacturer->tag_color) : null,
             ] : null,
             'image' => ($assetmodel->image != '') ? Storage::disk('public')->url('models/'.e($assetmodel->image)) : null,
-            'model_number' => e($assetmodel->model_number),
+            'model_number' => ($assetmodel->model_number ? e($assetmodel->model_number): null),
             'min_amt'   => ($assetmodel->min_amt) ? (int) $assetmodel->min_amt : null,
+
             'depreciation' => ($assetmodel->depreciation) ? [
                 'id' => (int) $assetmodel->depreciation->id,
                 'name'=> e($assetmodel->depreciation->name),
             ] : null,
             'assets_count' => (int) $assetmodel->assets_count,
+            'assets_assigned_count' => (int) $assetmodel->assets_assigned_count,
+            'assets_archived_count' => (int) $assetmodel->assets_archived_count,
+            'remaining' => (int) ($assetmodel->assets_count - (int) $assetmodel->assets_assigned_count) - (int) $assetmodel->assets_archived_count,
             'category' => ($assetmodel->category) ? [
                 'id' => (int) $assetmodel->category->id,
                 'name'=> e($assetmodel->category->name),
+                'tag_color'=> ($assetmodel->category->tag_color) ? e($assetmodel->category->tag_color) : null,
             ] : null,
             'fieldset' => ($assetmodel->fieldset) ? [
                 'id' => (int) $assetmodel->fieldset->id,
@@ -64,10 +70,11 @@ class AssetModelsTransformer
             'default_fieldset_values' => $default_field_values,
             'eol' => ($assetmodel->eol > 0) ? $assetmodel->eol.' months' : 'None',
             'requestable' => ($assetmodel->requestable == '1') ? true : false,
+            'require_serial' => ($assetmodel->require_serial == '1') ? true : false,
             'notes' => Helper::parseEscapedMarkedownInline($assetmodel->notes),
             'created_by' => ($assetmodel->adminuser) ? [
                 'id' => (int) $assetmodel->adminuser->id,
-                'name'=> e($assetmodel->adminuser->present()->fullName()),
+                'name'=> e($assetmodel->adminuser->display_name),
             ] : null,
             'created_at' => Helper::getFormattedDateObject($assetmodel->created_at, 'datetime'),
             'updated_at' => Helper::getFormattedDateObject($assetmodel->updated_at, 'datetime'),
@@ -104,6 +111,7 @@ class AssetModelsTransformer
         $array = [
             'id' => (int) $file->id,
             'filename' => e($file->filename),
+            'note' => $file->note,
             'url' => route('show/modelfile', [$assetmodel->id, $file->id]),
             'created_by' => ($file->adminuser) ? [
                 'id' => (int) $file->adminuser->id,

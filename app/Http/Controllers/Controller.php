@@ -22,6 +22,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Accessory;
+use App\Models\Asset;
+use App\Models\AssetModel;
+use App\Models\Component;
+use App\Models\Consumable;
+use App\Models\License;
+use App\Models\Location;
+use App\Models\Maintenance;
+use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -31,6 +41,51 @@ use Illuminate\Routing\Controller as BaseController;
 abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    static $map_object_type = [
+        'accessories' => Accessory::class,
+        'maintenances' => Maintenance::class,
+        'assets' => Asset::class,
+        'audits' => Asset::class,
+        'components' => Component::class,
+        'consumables' => Consumable::class,
+        'hardware' => Asset::class,
+        'licenses' => License::class,
+        'locations' => Location::class,
+        'models' => AssetModel::class,
+        'suppliers' => Supplier::class,
+        'users' => User::class,
+    ];
+
+    static $map_storage_path = [
+        'accessories' => 'private_uploads/accessories/',
+        'maintenances' => 'private_uploads/maintenances/',
+        'assets' => 'private_uploads/assets/',
+        'audits' => 'private_uploads/audits/',
+        'components' => 'private_uploads/components/',
+        'consumables' => 'private_uploads/consumables/',
+        'hardware' => 'private_uploads/assets/',
+        'licenses' => 'private_uploads/licenses/',
+        'locations' => 'private_uploads/locations/',
+        'models' => 'private_uploads/models/',
+        'suppliers' => 'private_uploads/suppliers/',
+        'users' => 'private_uploads/users/',
+    ];
+
+    static $map_file_prefix= [
+        'accessories' => 'accessory',
+        'maintenances' => 'maintenance',
+        'assets' => 'asset',
+        'audits' => 'audits',
+        'components' => 'component',
+        'consumables' => 'consumable',
+        'hardware' => 'asset',
+        'licenses' => 'license',
+        'locations' => 'location',
+        'models' => 'model',
+        'suppliers' => 'supplier',
+        'users' => 'user',
+    ];
 
     public function __construct()
     {

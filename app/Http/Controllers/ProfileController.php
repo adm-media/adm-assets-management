@@ -3,15 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ImageUploadRequest;
+use App\Http\Transformers\ProfileTransformer;
+use App\Models\Actionlog;
+use App\Models\Asset;
 use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\CurrentInventory;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use \Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 /**
  * This controller handles all actions related to User Profiles for
  * the Snipe-IT Asset Management application.
@@ -28,7 +35,7 @@ class ProfileController extends Controller
      */
     public function getIndex() : View
     {
-        $this->authorize('self.profile');
+
         $user = auth()->user();
         return view('account/profile', compact('user'));
     }
@@ -41,20 +48,25 @@ class ProfileController extends Controller
      */
     public function postIndex(ImageUploadRequest $request) : RedirectResponse
     {
-        $this->authorize('self.profile');
+
         $user = auth()->user();
-        $user->first_name = $request->input('first_name');
-        $user->last_name = $request->input('last_name');
-        $user->website = $request->input('website');
-        $user->gravatar = $request->input('gravatar');
-        $user->skin = $request->input('skin');
-        $user->phone = $request->input('phone');
+
+        if ((Gate::allows('self.profile')) && (! config('app.lock_passwords'))) {
+            $user->first_name = $request->input('first_name');
+            $user->last_name = $request->input('last_name');
+            $user->website = $request->input('website');
+            $user->gravatar = $request->input('gravatar');
+            $user->phone = $request->input('phone');
+        }
+
+
         $user->enable_sounds = $request->input('enable_sounds', false);
         $user->enable_confetti = $request->input('enable_confetti', false);
+        $user->link_light_color = $request->input('link_light_color', '#296282');
+        $user->link_dark_color = $request->input('link_dark_color', '#296282');
+        $user->nav_link_color = $request->input('nav_link_color', '#FFFFFF');
+        $user->locale = $request->input('locale');
 
-        if (! config('app.lock_passwords')) {
-            $user->locale = $request->input('locale', 'en-US');
-        }
 
         if ((Gate::allows('self.two_factor')) && ((Setting::getSettings()->two_factor_enabled == '1') && (! config('app.lock_passwords')))) {
             $user->two_factor_optin = $request->input('two_factor_optin', '0');
@@ -136,7 +148,7 @@ class ProfileController extends Controller
             }
 
             // This checks to make sure that the user's password isn't the same as their username,
-            // email address, first name or last name (see https://github.com/snipe/snipe-it/issues/8661)
+            // email address, first name or last name (see https://github.com/grokability/snipe-it/issues/8661)
             // While this is handled via SaveUserRequest form request in other places, we have to do this manually
             // here because we don't have the username, etc form fields available in the profile password change
             // form.
@@ -220,7 +232,7 @@ class ProfileController extends Controller
 
         if (!$user = User::find(auth()->id())) {
             return redirect()->back()
-                ->with('error', trans('admin/users/message.user_not_found', ['id' => $id]));
+                ->with('error', trans('admin/users/message.user_not_found', ['id' => auth()->id()]));
         }
         if (empty($user->email)) {
             return redirect()->back()->with('error', trans('admin/users/message.user_has_no_email'));
@@ -233,5 +245,32 @@ class ProfileController extends Controller
         }
 
         return redirect()->back()->with('success', trans('admin/users/general.user_notified'));
+    }
+
+
+
+    public function getStoredEula($filename) : Response | BinaryFileResponse | RedirectResponse
+    {
+
+        $logentry = Actionlog::where('filename', $filename)->first();
+
+        // Make sure the user has permission to view this file
+        // Also allow if the user (manager) able to view both users and assets
+        $allowed_to_view_users_assets = Gate::allows('view', User::class) && Gate::allows('view', Asset::class);
+
+        if (auth()->id() != $logentry->target_id && !$allowed_to_view_users_assets) {
+            return redirect()->route('account')->with('error', trans('general.generic_model_not_found', ['model' => 'file']));
+        }
+
+        if (config('filesystems.default') == 's3_private') {
+            return redirect()->away(Storage::disk('s3_private')->temporaryUrl('private_uploads/eula-pdfs/'.$filename, now()->addMinutes(5)));
+        }
+
+        if (Storage::exists('private_uploads/eula-pdfs/'.$filename)) {
+            return response()->download(config('app.private_uploads').'/eula-pdfs/'.$filename);
+        }
+
+        return redirect()->back()->with('error',  trans('general.file_does_not_exist'));
+
     }
 }

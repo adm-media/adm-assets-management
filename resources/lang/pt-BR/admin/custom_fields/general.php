@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Criar um novo conjunto de campos',
     'create_field'            => 'Novo conjunto de campos personalizado',
     'create_field_title' => 'Criar um novo campo personalizado',
-    'value_encrypted'      	        => 'O valor deste campo é encriptado no banco de dados. Somente usuários administradores podem ver o valor descriptografado',
+    'value_encrypted'      	        => 'O valor deste campo é criptografado no banco de dados. Somente usuários com permissão para ver campos personalizados criptografados serão capazes de visualizar o valor descriptografado',
     'show_in_email'     => 'Incluir o valor desse campo nos e-mails enviados para o usuário? Campos criptografados não podem ser incluídos em e-mails',
     'show_in_email_short' => 'Incluir nos e-mails',
     'help_text' => 'Texto de ajuda',
@@ -57,7 +57,15 @@ return [
     'show_in_requestable_list_short' => 'Mostrar na lista de ativos solicitáveis',
     'show_in_requestable_list' => 'Mostrar valor na lista de ativos solicitáveis. Campos criptografados não serão exibidos',
     'encrypted_options' => 'Este campo está criptografado, então algumas opções de exibição não estarão disponíveis.',
-    'display_checkin' => 'Display in checkin forms',
-    'display_checkout' => 'Display in checkout forms',
-
+    'display_checkin' => 'Exibir em formulários de entrada',
+    'display_checkout' => 'Exibir em formulários de saída',
+    'display_audit' => 'Exibir nos formulários de auditoria',
+    'types' => [
+        'text' => 'Caixa de Texto',
+        'listbox' => 'Caixa de Listas',
+        'textarea' => 'Área de texto (Multi-linhas)',
+        'checkbox' => 'Caixa de seleção',
+        'radio' => 'Botões de Rádio',
+    ],
+    'general_help_text' => 'Custom fields store additional information not covered by the default asset fields. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

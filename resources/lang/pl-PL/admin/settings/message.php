@@ -37,7 +37,7 @@ return [
         'authentication_success' => 'Użytkownik uwierzytelniony z LDAP pomyślnie!'
     ],
     'labels' => [
-        'null_template' => 'Label template not found. Please select a template.',
+        'null_template' => 'Nie znaleziono szablonu etykiety. Proszę wybrać szablon.',
         ],
     'webhook' => [
         'sending' => 'Wysyłanie wiadomości testowej :app...',
@@ -49,6 +49,11 @@ return [
         'error_redirect' => 'BŁĄD: 301/302 :endpoint zwraca przekierowanie. Ze względów bezpieczeństwa nie podążamy za przekierowaniami. Proszę użyć aktualnego punktu końcowego.',
         'error_misc' => 'Coś poszło nie tak. :( ',
         'webhook_fail' => ' Powiadomienie webhook nie powiodło się: Sprawdź, czy adres URL jest nadal prawidłowy.',
-        'webhook_channel_not_found' => ' Nie znaleziono kanału webhook.'
-    ]
+        'webhook_channel_not_found' => ' Nie znaleziono kanału webhook.',
+        'ms_teams_deprecation' => 'Wsparcie wybranego wywołania zwrotnego (webhook) dla Microsoft Teams kończy się 31 Grudnia 2025r. Skorzystaj z przepływów pracy URL. Dokumentację Microsoft na ten temat znajdziesz <a href="https://support.microsoft.com/en-us/office/create-incoming-webhooks-with-workflows-for-microsoft-teams-8ae491c7-0394-4861-ba59-055e33f75498" target="_blank"> tutaj.</a>',
+    ],
+    'location_scoping' => [
+        'not_saved' => 'Twoje ustawienia nie zostały zapisane',
+        'mismatch' => 'W twojej bazie danych jest 1 element, który wymaga twojej uwagi, zanim będziesz mógł włączyć ograniczenia lokalizacji.|W twojej bazie danych jest :count środków, które wymagają twojej uwagi, zanim będziesz mógł włączyć ograniczenia lokalizacji.',
+    ],
 ];

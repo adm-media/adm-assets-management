@@ -12,7 +12,8 @@ return [
     'create'                    => 'Uus asukoht',
     'update'                    => 'Uuenda asukohta',
     'print_assigned'            => 'Prindi määratud',
-    'print_all_assigned'        => 'Prindi kõik varad',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Asukoha nimi',
     'address'                   => 'Aadress',
     'address2'                   => 'Address Line 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Allkiri (finantsaudiitor):',
     'signed_by_location_manager' => 'Allkiri (asukohahaldur):',
     'signed_by'                 => 'Allkiri:',
+    'clone'  					=> 'Clone Location',
 ];

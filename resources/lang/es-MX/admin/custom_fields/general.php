@@ -5,7 +5,7 @@ return [
     'manage'                    => 'Administrar',
     'field'		                => 'Campo',
     'about_fieldsets_title'		=> 'Acerca de los grupos de campos',
-    'about_fieldsets_text'		=> 'Los grupos de campos le permiten agrupar campos personalizados que se reutilizan frecuentemente para determinados modelos de activos.',
+    'about_fieldsets_text'		=> 'Los grupos de campos personalizados te permiten agrupar campos que se usan frecuentemente para determinados modelos de equipos.',
     'custom_format'             => 'Expresión regular personalizada...',
     'encrypt_field'      	        => 'Cifrar el valor de este campo en la base de datos',
     'encrypt_field_help'      => 'ADVERTENCIA: Cifrar un campo hace que no se pueda buscar.',
@@ -33,7 +33,7 @@ return [
     'create_fieldset_title' => 'Crear un nuevo grupo de campos',
     'create_field'            => 'Nuevo campo personalizado',
     'create_field_title' => 'Crear un nuevo campo personalizado',
-    'value_encrypted'      	        => 'El valor de este campo está cifrado en la base de datos. Solo los administradores pueden ver el valor descifrado',
+    'value_encrypted'      	        => 'El valor de este campo está encriptado en la base de datos. Solo usuarios con permiso para ver campos personalizados encriptados serán capaces de ver el contenido desencriptado',
     'show_in_email'     => '¿Incluir el valor de este campo en los correos de asignación enviados al usuario? Los campos cifrados no se pueden incluir en los correos electrónicos',
     'show_in_email_short' => 'Incluir en los correos electrónicos',
     'help_text' => 'Texto de ayuda',
@@ -59,5 +59,13 @@ return [
     'encrypted_options' => 'Este campo está cifrado, por lo que algunas opciones de visualización no estarán disponibles.',
     'display_checkin' => 'Display in checkin forms',
     'display_checkout' => 'Display in checkout forms',
-
+    'display_audit' => 'Display in audit forms',
+    'types' => [
+        'text' => 'Text Box',
+        'listbox' => 'List Box',
+        'textarea' => 'Textarea (multi-line)',
+        'checkbox' => 'Checkbox',
+        'radio' => 'Botones de radio',
+    ],
+    'general_help_text' => 'Los campos personalizados almacenan informacion que no está cubierta por los campos de activos por defecto. <a href="https://snipe-it.readme.io/docs/custom-fields#/"><i class="fa fa-external-link"></i></a>.',
 ];

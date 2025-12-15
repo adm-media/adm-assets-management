@@ -12,7 +12,8 @@ return [
     'create'                    => '新增位置',
     'update'                    => '更新位置',
     'print_assigned'            => '列印已分配的',
-    'print_all_assigned'        => '列印所有已分配的',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => '位置名稱',
     'address'                   => '地址',
     'address2'                   => '地址第二行',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => '由財務稽核員簽署：',
     'signed_by_location_manager' => '由區域負責人簽署：',
     'signed_by'                 => '由以下人員簽署：',
+    'clone'  					=> 'Clone Location',
 ];

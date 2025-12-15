@@ -12,7 +12,8 @@ return [
     'create'                    => 'Creeaza locatie',
     'update'                    => 'Actualizeaza locatie',
     'print_assigned'            => 'Tipărește active atribuite',
-    'print_all_assigned'        => 'Tipărește toate activele atribuite',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'Nume locatie',
     'address'                   => 'Adresa',
     'address2'                   => 'Adresă linia 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'Semnat de (auditor financiar):',
     'signed_by_location_manager' => 'Semnat de (Location Manager):',
     'signed_by'                 => 'Semnat Oprit:',
+    'clone'  					=> 'Clone Location',
 ];

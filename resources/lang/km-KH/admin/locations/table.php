@@ -12,7 +12,8 @@ return [
     'create'                    => 'បង្កើតទីតាំង',
     'update'                    => 'ធ្វើបច្ចុប្បន្នភាពទីតាំង',
     'print_assigned'            => 'បោះពុម្ពដែលបានកំណត់',
-    'print_all_assigned'        => 'បោះពុម្ពដែលបានចាត់តាំងទាំងអស់។',
+    'print_inventory'           => 'Print Inventory',
+    'print_all_assigned'        => 'Print Inventory and Assigned',
     'name'                      => 'ឈ្មោះទីតាំង',
     'address'                   => 'អាស័យដ្ឋាន',
     'address2'                   => 'អាស័យដ្ឋាន ខ្សែទី 2',
@@ -39,4 +40,5 @@ return [
     'signed_by_finance_auditor' => 'ចុះហត្ថលេខាដោយ (សវនករហិរញ្ញវត្ថុ)៖',
     'signed_by_location_manager' => 'ចុះហត្ថលេខាដោយ (អ្នកគ្រប់គ្រងទីតាំង)៖',
     'signed_by'                 => 'ចុះហត្ថលេខាបិទដោយ៖',
+    'clone'  					=> 'Clone Location',
 ];

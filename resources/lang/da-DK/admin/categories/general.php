@@ -3,13 +3,15 @@
 return array(
     'asset_categories' 					=> 'Aktiver Kategorier',
     'category_name'  					=> 'Kategorinavn',
-    'checkin_email'                     => 'Send e-mail til bruger ved tjek ind/ud.',
+    'email_to_user_upon_checkin' => 'Send email to user upon checkin.',
+    'email_to_user_upon_checkin_and_checkout' => 'Send email to user upon checkin/checkout.',
+    'email_to_initiator'                => 'Send email to you when user accepts or declines checkout.',
     'checkin_email_notification'        => 'Denne bruger tilsendes en e-mail ved tjek ind/ud.',
     'clone'                             => 'Klon Kategori',
     'create'  							=> 'Opret kategori',
     'edit'                              => 'Rediger Kategori',
-    'email_will_be_sent_due_to_global_eula' => 'En e-mail vil blive sendt til brugeren, fordi den globale slutbrugerlicensaftale bliver brugt.',
-    'email_will_be_sent_due_to_category_eula' => 'En e-mail vil blive sendt til brugeren, fordi en slutbrugerlicens er sat for denne kategori.',
+    'email_will_be_sent_due_to_global_eula' => 'An email will be sent to the user upon checkout because the global EULA is being used.',
+    'email_will_be_sent_due_to_category_eula' => 'An email will be sent to the user upon checkout because a EULA is set for this category.',
     'eula_text'							=> 'Slutbrugerlicenskategori',
     'eula_text_help'					=> 'Dette felt tillader dig at tilpasse din slutbrugerlicens til specifikke typer af aktiver. Hvis du kun har en slutbrugerlicens for alle dine aktiver, kan du afkrydse boksen nedenfor for at bruge den primære standardlicens.',
     'name'                              => 'Kategori Navn',
@@ -21,5 +23,9 @@ return array(
     'use_default_eula'					=> 'Brug den <a href="#" data-toggle="modal" data-target="#eulaModal">primære standard slutbrugerlicens</a> i stedet for.',
     'use_default_eula_disabled'			=> '<del>Brug den primære standard slutbrugerlicens i stedet for.</del> Ingen primær standard slutbrugerlicens er defineret. Tilføj en under indstillinger.',
     'use_default_eula_column'			=> 'Brug standard slutbrugerlicensaftale',
+    'import_require_acceptance'         => 'Require Acceptance',
+    'import_checkin_email'              => 'Send Checkin Email',
+    'import_eula_text'                  => 'EULA text',
+    'import_category_type'              => 'Category Type',
 
 );
