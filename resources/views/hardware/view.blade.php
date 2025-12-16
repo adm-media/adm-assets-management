@@ -431,7 +431,7 @@
                                     </div>
                                 @endif
                                 <br><br>
-                            </div>
+                            
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var inputValue = document.getElementById('qrcode_value').value;
