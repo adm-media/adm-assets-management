@@ -208,6 +208,17 @@ class Asset extends Depreciable
         'model.manufacturer' => ['name'],
     ];
 
+    public function getAttribute($key)
+    {
+        $value = parent::getAttribute($key);
+
+        if (str_starts_with($key, '_snipeit_sap_code_') && !is_null($value) && $value !== '') {
+            return str_pad($value, 10, '0', STR_PAD_LEFT);
+        }
+
+        return $value;
+    }
+
     protected static function booted(): void
     {
         static::forceDeleted(function (Asset $asset) {
