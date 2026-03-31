@@ -6,7 +6,8 @@
         <input type="text"
             id="qrcode_value"
             class="form-control text-center"
-            value="{{ $asset->_snipeit_sap_code_47 ?? 'Nessun valore' }}"
+            @php $sapCode = $asset->_snipeit_sap_code_3 ?? $asset->_snipeit_sap_code_47 ?? null; @endphp
+            value="{{ $sapCode ? str_pad($sapCode, 10, '0', STR_PAD_LEFT) : 'Nessun valore' }}"
             readonly
             style="max-width: 240px; margin: 0 auto 10px auto; font-weight: bold;">
         <img id="qrcode_image"
