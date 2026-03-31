@@ -19,6 +19,8 @@ services:
         restart: true
     env_file:
       - .env.dev.docker
+    volumes:
+      - .:/var/www/html
 
   mariadb:
     image: mariadb:11.4.7
